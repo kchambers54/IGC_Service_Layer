@@ -56,7 +56,7 @@ public class URLConnection {
      * @return String of HTTP response.
      * @throws IOException:
      */
-    private String makeHttpRequest(URL url, HttpMethod method, boolean useAuth) throws IOException {
+    private Response makeHttpRequest(URL url, HttpMethod method, boolean useAuth) throws IOException {
         // Establish connection and request method //
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(method.name());
@@ -89,7 +89,7 @@ public class URLConnection {
             connection = (HttpURLConnection) newUrl.openConnection();
         }
 
-        return JsonResponseBuilder.getResponse(connection, false); //Use this to return only the message of the response.
+        return JsonResponseBuilder.getResponseObject(connection); //Use this to return only the message of the response.
     }
 
     /**
@@ -176,7 +176,7 @@ public class URLConnection {
         String urlWithExtension = this.urlString + extension;
         System.out.println("get method called for URL: " + urlWithExtension);
         URL getUrl = new URL(urlWithExtension);
-        return makeHttpRequest(getUrl, HttpMethod.GET, useAuth);
+        return makeHttpRequest(getUrl, HttpMethod.GET, useAuth).getMessage();
     }
 
     /**
@@ -190,7 +190,7 @@ public class URLConnection {
         System.out.println("getIGCTermById called for URL: " + urlWithExtension);
         URL getUrl = new URL(urlWithExtension);
 
-        String receivedString = makeHttpRequest(getUrl, HttpMethod.GET, true);
+        String receivedString = makeHttpRequest(getUrl, HttpMethod.GET, true).getMessage();
         return JsonToObject.toTerm(receivedString);
     }
 
@@ -205,7 +205,7 @@ public class URLConnection {
         System.out.println("getIGCCategoryById called for URL: " + urlWithExtension);
         URL getUrl = new URL(urlWithExtension);
 
-        String receivedString = makeHttpRequest(getUrl, HttpMethod.GET, true);
+        String receivedString = makeHttpRequest(getUrl, HttpMethod.GET, true).getMessage();
         return JsonToObject.toCategory(receivedString);
     }
 
@@ -239,7 +239,7 @@ public class URLConnection {
         String urlWithExtension = this.urlString + "search?types=category&pageSize=" + pageSize;
         URL getUrl = new URL(urlWithExtension);
         try {
-            String receivedString = makeHttpRequest(getUrl, HttpMethod.GET, true);
+            String receivedString = makeHttpRequest(getUrl, HttpMethod.GET, true).getMessage();
             return JsonToObject.toIGCItemList(receivedString);
         } catch (Exception e) {
             e.printStackTrace();
@@ -257,7 +257,7 @@ public class URLConnection {
         String urlWithExtension = this.urlString + "search?types=term&pageSize=" + pageSize;
         URL getUrl = new URL(urlWithExtension);
         try {
-            String receivedString = makeHttpRequest(getUrl, HttpMethod.GET, true);
+            String receivedString = makeHttpRequest(getUrl, HttpMethod.GET, true).getMessage();
             return JsonToObject.toIGCItemList(receivedString);
         } catch (Exception e) {
             e.printStackTrace();
@@ -269,16 +269,18 @@ public class URLConnection {
     /* Updates can easily be done by creating an empty new Resource object (Term, Category, etc), and
      * then using setter methods to add the fields that are to be updated. */
 
-    /** TODO - Seems that getting a Resource from the API, changing a field and then using that Resource
-     *       here as an argument causes a server error.
-     *       - May have something to do with PUTing a Resource object with API set fields.
-     *       - Can either add a MAP based method, or create a new term object (seems clunky).
+    /**
      * Update an existing IGC API resource (Category, Term, etc...).
      * @param id ID of the resource to update.
      * @param updateResource IGC object (Term, Category, etc) whose properties will be applied to an
      *                       existing term in the IGC API.
      * @return Response object from the API request.
      * @throws Exception:
+     *
+     *  - Seems that getting a Resource from the API, changing a field and then using that Resource
+     *    here as an argument causes a server error.
+     *  - May have something to do with PUTing a Resource object with API set fields.
+     *  - Can instead create an empty term object, using setters to add updated field values.
      */
     public Response updateIGCResource(String id, IGCResource updateResource) throws Exception {
         String urlWithExtension = this.urlString + "assets/" + id;
