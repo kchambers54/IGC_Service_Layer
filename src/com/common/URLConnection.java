@@ -42,7 +42,7 @@ public class URLConnection {
         // Disable ssl verification (Workaround) //
         Utility.disableSslVerification();
         // Define default POST search return types
-        String[] searchTypes = {"category", "term"};
+        String[] searchTypes = {"category", "term"};  // This can be changed as more Resource types are added.
         this.postSearchTypes = Arrays.asList(searchTypes);
     }
 
@@ -266,8 +266,13 @@ public class URLConnection {
     }
 
     //// PUT METHODS - Update ////
+    /* Updates can easily be done by creating an empty new Resource object (Term, Category, etc), and
+     * then using setter methods to add the fields that are to be updated. */
 
-    /**
+    /** TODO - Seems that getting a Resource from the API, changing a field and then using that Resource
+     *       here as an argument causes a server error.
+     *       - May have something to do with PUTing a Resource object with API set fields.
+     *       - Can either add a MAP based method, or create a new term object (seems clunky).
      * Update an existing IGC API resource (Category, Term, etc...).
      * @param id ID of the resource to update.
      * @param updateResource IGC object (Term, Category, etc) whose properties will be applied to an
@@ -277,9 +282,9 @@ public class URLConnection {
      */
     public Response updateIGCResource(String id, IGCResource updateResource) throws Exception {
         String urlWithExtension = this.urlString + "assets/" + id;
-        URL postUrl = new URL(urlWithExtension);
+        URL putUrl = new URL(urlWithExtension);
         try {
-            Response response = makeHttpRequest(postUrl, HttpMethod.PUT, true, updateResource);
+            Response response = makeHttpRequest(putUrl, HttpMethod.PUT, true, updateResource);
             return response;
         } catch (Exception e) {
             e.printStackTrace();
@@ -287,17 +292,17 @@ public class URLConnection {
         }
     }
 
-    /**TODO TEST
+    /**
      * Update the name of an IGC Term with a given ID.
      * @param id ID of the term to update.
      * @param name New name for the term.
      * @return Response object from the API request.
-     * @throws Exception
+     * @throws Exception:
      */
     public Response updateIGCTermName(String id, String name) throws Exception {
-        Term toUpdate = this.getIGCTermById(id);
-        toUpdate.set_name(name);
-        return this.updateIGCResource(id, toUpdate);
+        Term updateTerm = new Term();
+        updateTerm.setName(name);
+        return this.updateIGCResource(id, updateTerm);
     }
 
     /**TODO TEST
@@ -305,13 +310,12 @@ public class URLConnection {
      * @param id ID of the term to update.
      * @param name New name for the term.
      * @return Response object from the API request.
-     * @throws Exception
+     * @throws Exception:
      */
     public Response updateIGCCategoryName(String id, String name) throws Exception {
-        Category toUpdate = this.getIGCCategoryById(id);
-        System.out.println("Received this Term to update:\n" + toUpdate);
-        toUpdate.set_name(name);
-        return this.updateIGCResource(id, toUpdate);
+        Category updateCategory = new Category();
+        updateCategory.setName(name);
+        return this.updateIGCResource(id, updateCategory);
     }
 
     //// POST METHODS - Create and Search ////

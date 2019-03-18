@@ -29,70 +29,70 @@ public class Main {
 //            //// END TEST 1 ////
 //            test_num++;
 //
-//            //// TEST 2 - GET from the IGC API ////
-//            System.out.println("---- BEGINNING TEST2 ----\n");
+////            //// TEST 2 - GET from the IGC API ////
+////            System.out.println("---- BEGINNING TEST2 ----\n");
+////            // Establish URLConnection object with base URL.
+////            URLConnection connection2 = new URLConnection(testUrl1);
+////            // Call the GET method for the object, appending the base URL (with specifics).
+////            String getTest2 = connection2.get("search/?types=category", true);
+////            System.out.println("\nTest2 - GET RESPONSE:\n" + getTest2);
+////            System.out.println("\n---- ENDING TEST2 ----\n");
+////            //// END TEST 2 ////
+////            test_num++;
+//
+//            //// TEST 3 - Perform a IGC GET request and convert ////
+//            //// the JSON response to a Java object (a Term).  ////
+//            System.out.println("---- BEGINNING TEST3 ----\n");
 //            // Establish URLConnection object with base URL.
-//            URLConnection connection2 = new URLConnection(testUrl1);
-//            // Call the GET method for the object, appending the base URL (with specifics).
-//            String getTest2 = connection2.get("search/?types=category", true);
-//            System.out.println("\nTest2 - GET RESPONSE:\n" + getTest2);
-//            System.out.println("\n---- ENDING TEST2 ----\n");
-//            //// END TEST 2 ////
-//            test_num++;
-
-            //// TEST 3 - Perform a IGC GET request and convert ////
-            //// the JSON response to a Java object (a Term).  ////
-            System.out.println("---- BEGINNING TEST3 ----\n");
-            // Establish URLConnection object with base URL.
-            URLConnection connection3 = new URLConnection(testUrl1);
-            // Call the getIGCTermById method for the object, appending the base URL.
-            Term termTest = connection3.getIGCTermById(
-                    "6662c0f2.e1b1ec6c.00t6i4b9s.oc1te9k.igov6t.hqctlblmgp8tjbb6ad4el"
-            );
-            // We are performing a GET request for information on a term: "Technical Foul".
-            System.out.println("Term object generated:\n\n" + termTest.toString());
-            // Try getting Term object variable.
-            System.out.println("\nGetting name of Term: " + termTest.getName());
-            System.out.println("\n---- ENDING TEST3 ----\n");
-            //// END TEST 3 ////
-            test_num++;
-
-//            //// TEST 4 - Perform a IGC GET request and convert ////
-//            //// the JSON response to a Java object (a Category).  ////
-//            System.out.println("---- BEGINNING TEST4 ----\n");
-//            // Call the getIGCCategoryById method for the object, appending the base URL.
-//            Category categoryTest = connection3.getIGCCategoryById(
-//                    "6662c0f2.ee6a64fe.00t6i4b6l.2q3r1c0.javi8g.f6vf7ssaf75b7ed3btpqr"
+//            URLConnection connection3 = new URLConnection(testUrl1);
+//            // Call the getIGCTermById method for the object, appending the base URL.
+//            Term termTest = connection3.getIGCTermById(
+//                    "6662c0f2.e1b1ec6c.00t6i4b9s.oc1te9k.igov6t.hqctlblmgp8tjbb6ad4el"
 //            );
-//            // We are performing a GET request for information on a category: "Fouls".
-//            System.out.println("Category object generated:\n\n" + categoryTest.toString());
-//            // Try getting Category object variable (name).
-//            System.out.println("\nGetting name of Category: " + categoryTest.getName());
-//            System.out.println("\n---- ENDING TEST4 ----\n");
-//            //// END TEST 4 ////
+//            // We are performing a GET request for information on a term: "Technical Foul".
+//            System.out.println("Term object generated:\n\n" + termTest.toString());
+//            // Try getting Term object variable.
+//            System.out.println("\nGetting name of Term: " + termTest.getName());
+//            System.out.println("\n---- ENDING TEST3 ----\n");
+//            //// END TEST 3 ////
 //            test_num++;
 //
-//            //// TEST 5 - Perform a IGC GET request of all categories. ////
-//            System.out.println("---- BEGINNING TEST5 ----\n");
-//            // Call the getIGCCategoryList method for the object, entering how many items we want returned.
-//            IGCItemList categoryList = connection3.getIGCCategoryList(100);
-//            System.out.println("CategoryList object generated\n" /* + categoryList.toString() */);
-//            // Try getting Category object variable (name).
-//            System.out.println("\nGetting paging info of categoryList:\n" + categoryList.getPaging());
-//            System.out.println("\n---- ENDING TEST5 ----\n");
-//            //// END TEST 5 ////
-//            test_num++;
-//
-//            //// TEST 6 - Perform a IGC GET request of all terms. ////
-//            System.out.println("---- BEGINNING TEST6 ----\n");
-//            // Call the getIGCTermList method for the object, entering how many items we want returned.
-//            IGCItemList termList = connection3.getIGCTermList(100);
-//            System.out.println("termList object generated\n" /* + termList.toString() */);
-//            // Try getting Term object variable (name).
-//            System.out.println("\nGetting paging info of termList:\n" + termList.getPaging());
-//            System.out.println("\n---- ENDING TEST6 ----\n");
-//            //// END TEST 6 ////
-//            test_num++;
+////            //// TEST 4 - Perform a IGC GET request and convert ////
+////            //// the JSON response to a Java object (a Category).  ////
+////            System.out.println("---- BEGINNING TEST4 ----\n");
+////            // Call the getIGCCategoryById method for the object, appending the base URL.
+////            Category categoryTest = connection3.getIGCCategoryById(
+////                    "6662c0f2.ee6a64fe.00t6i4b6l.2q3r1c0.javi8g.f6vf7ssaf75b7ed3btpqr"
+////            );
+////            // We are performing a GET request for information on a category: "Fouls".
+////            System.out.println("Category object generated:\n\n" + categoryTest.toString());
+////            // Try getting Category object variable (name).
+////            System.out.println("\nGetting name of Category: " + categoryTest.getName());
+////            System.out.println("\n---- ENDING TEST4 ----\n");
+////            //// END TEST 4 ////
+////            test_num++;
+////
+////            //// TEST 5 - Perform a IGC GET request of all categories. ////
+////            System.out.println("---- BEGINNING TEST5 ----\n");
+////            // Call the getIGCCategoryList method for the object, entering how many items we want returned.
+////            IGCItemList categoryList = connection3.getIGCCategoryList(100);
+////            System.out.println("CategoryList object generated\n" /* + categoryList.toString() */);
+////            // Try getting Category object variable (name).
+////            System.out.println("\nGetting paging info of categoryList:\n" + categoryList.getPaging());
+////            System.out.println("\n---- ENDING TEST5 ----\n");
+////            //// END TEST 5 ////
+////            test_num++;
+////
+////            //// TEST 6 - Perform a IGC GET request of all terms. ////
+////            System.out.println("---- BEGINNING TEST6 ----\n");
+////            // Call the getIGCTermList method for the object, entering how many items we want returned.
+////            IGCItemList termList = connection3.getIGCTermList(100);
+////            System.out.println("termList object generated\n" /* + termList.toString() */);
+////            // Try getting Term object variable (name).
+////            System.out.println("\nGetting paging info of termList:\n" + termList.getPaging());
+////            System.out.println("\n---- ENDING TEST6 ----\n");
+////            //// END TEST 6 ////
+////            test_num++;
 //
 //            //// TEST 7 - POST a new category. ////
 //            System.out.println("---- BEGINNING TEST7 ----\n");
@@ -114,26 +114,26 @@ public class Main {
 //            //// END TEST 7 ////
 //            test_num++;
 //
-            //// TEST 8 - POST a new term. ////
-            System.out.println("---- BEGINNING TEST8 ----\n");
-            //Create the new Term object with parent: "Data Directory".
-            Term newTerm = new Term(
-                    "a_test_term_1", "Test term created via API",
-                    "long description test",
-                    "6662c0f2.ee6a64fe.00t6cc6op.9eo1d2k.skhof8.dgog8qrnvlvm4pglk887k",
-                    "CANDIDATE"
-            );
-            // Call the createIGCTerm method with the new Term we created.
-            Response postResponse2 = connection3.createIGCResource(newTerm);
-            System.out.println("New term posted to API\n");
-            // Get the response from the API.
-            System.out.println("\nResponse from API:\n" + postResponse2.getMessage() +
-                    "\nNew ID: " + postResponse2.get_id() +
-                    "\nResponse Code: " + postResponse2.getResponseCode() +
-                    "\nResponse Code Message: " + postResponse2.getCodeMessage());
-            System.out.println("\n---- ENDING TEST8 ----\n");
-            //// END TEST 8 ////
-            test_num++;
+//            //// TEST 8 - POST a new term. ////
+//            System.out.println("---- BEGINNING TEST8 ----\n");
+//            //Create the new Term object with parent: "Data Directory".
+//            Term newTerm = new Term(
+//                    "a_test_term_1", "Test term created via API",
+//                    "long description test",
+//                    "6662c0f2.ee6a64fe.00t6cc6op.9eo1d2k.skhof8.dgog8qrnvlvm4pglk887k",
+//                    "CANDIDATE"
+//            );
+//            // Call the createIGCTerm method with the new Term we created.
+//            Response postResponse2 = connection3.createIGCResource(newTerm);
+//            System.out.println("New term posted to API\n");
+//            // Get the response from the API.
+//            System.out.println("\nResponse from API:\n" + postResponse2.getMessage() +
+//                    "\nNew ID: " + postResponse2.get_id() +
+//                    "\nResponse Code: " + postResponse2.getResponseCode() +
+//                    "\nResponse Code Message: " + postResponse2.getCodeMessage());
+//            System.out.println("\n---- ENDING TEST8 ----\n");
+//            //// END TEST 8 ////
+//            test_num++;
 //
 //            //// TEST 9 - PUT a term update. ////
 //            if (postResponse2.getResponseCode() < 300) {
@@ -282,8 +282,8 @@ public class Main {
 //            } else {
 //                System.out.println("No term to update... Aborting test");
 //            }
-//            System.out.println("\n---- ENDING TEST16 ----\n");
-//            //// END TEST 16 ////
+//            System.out.println("\n---- ENDING TEST17 ----\n");
+//            //// END TEST 17 ////
 //            test_num++;
 
             System.out.println("Testing complete: Completed " + (test_num-1) + " tests.");
