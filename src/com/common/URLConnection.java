@@ -2,8 +2,11 @@ package com.common;
 
 import java.io.*;
 import java.net.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import com.Utility.JsonToObject;
@@ -416,8 +419,8 @@ public class URLConnection {
 
         List<PostCondition> conditions = new ArrayList<>();
         conditions.add(nameCondition);
-//        conditions.add(sDescCondition);
-//        conditions.add(lDescCondition);
+        conditions.add(sDescCondition);
+        conditions.add(lDescCondition);
 
         Response response = searchIGC(this.postSearchTypes, conditions, "or");
         return JsonToObject.toIGCItemList(response.getMessage());
@@ -442,22 +445,65 @@ public class URLConnection {
     }
 
     /**
-     * Searches the IGC API for resources modified between the to provided time arguments
-     * @param min lower bound UNIX time in milliseconds.
-     * @param max uppder bound UNIX time in milliseconds.
+     * Searches the IGC API for resources modified between the two provided dates/times.
+     * @param min String of lower bound time: 'yyyy/MM/dd HH:mm:ss'.
+     * @param max String of upper bound time: 'yyyy/MM/dd HH:mm:ss'.
      * @return IGCItemList of search results.
      * @throws IOException: thrown by makeHttpRequest()
      * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
+     * @throws ParseException: Thrown if dates cannot be properly parsed.
      */
-    public IGCItemList searchIGCResourceModifiedBetween(long min, long max) throws IOException, IllegalArgumentException {
-        // Set up search conditions
-        PostCondition nameCondition = new PostCondition("modified_on", "between",
-                null, false, min, max);
-        List<PostCondition> conditions = new ArrayList<>();
-        conditions.add(nameCondition);
+    public IGCItemList searchIGCResourceModifiedBetween(String min, String max)
+            throws IOException, IllegalArgumentException, ParseException {
+        //Parse dates.
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        try {
+            Date date1 = dateFormat.parse(min);
+            Date date2 = dateFormat.parse(max);
 
-        Response response = searchIGC(this.postSearchTypes, conditions, "or");
-        return JsonToObject.toIGCItemList(response.getMessage());
+            // Set up search conditions
+            PostCondition nameCondition = new PostCondition("modified_on", "between",
+                    null, false, date1.getTime(), date2.getTime());
+            List<PostCondition> conditions = new ArrayList<>();
+            conditions.add(nameCondition);
+
+            Response response = searchIGC(this.postSearchTypes, conditions, "or");
+            return JsonToObject.toIGCItemList(response.getMessage());
+        } catch (ParseException e) {
+            System.err.println("Could not parse date String");
+            throw e;
+        }
+    }
+
+    /** TODO TEST - Should work, near copy of above method.
+     * Searches the IGC API for resources modified between the two provided dates/times.
+     * @param min String of lower bound time: 'yyyy/MM/dd HH:mm:ss'.
+     * @param max String of upper bound time: 'yyyy/MM/dd HH:mm:ss'.
+     * @return IGCItemList of search results.
+     * @throws IOException: thrown by makeHttpRequest()
+     * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
+     * @throws ParseException: Thrown if dates cannot be properly parsed.
+     */
+    public IGCItemList searchIGCResourceCreatedBetween(String min, String max)
+            throws IOException, IllegalArgumentException, ParseException {
+        //Parse dates.
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        try {
+            Date date1 = dateFormat.parse(min);
+            Date date2 = dateFormat.parse(max);
+
+            // Set up search conditions
+            PostCondition nameCondition = new PostCondition("created_on", "between",
+                    null, false, date1.getTime(), date2.getTime());
+            List<PostCondition> conditions = new ArrayList<>();
+            conditions.add(nameCondition);
+
+            Response response = searchIGC(this.postSearchTypes, conditions, "or");
+            return JsonToObject.toIGCItemList(response.getMessage());
+        } catch (ParseException e) {
+            System.err.println("Could not parse date String");
+            throw e;
+        }
     }
 
     /**
@@ -500,7 +546,7 @@ public class URLConnection {
         return JsonToObject.toIGCItemList(response.getMessage());
     }
 
-    /**TODO Test
+    /**TODO TEST
      * Returns an IGCItemList of all Resources that are missing a given property.
      * @return IGCItemList of search results
      * @throws IOException: IOException thrown by makeHttpRequest()

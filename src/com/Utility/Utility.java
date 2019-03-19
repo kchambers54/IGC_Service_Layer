@@ -90,6 +90,6 @@ public class Utility {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication (username, password.toCharArray());
             }
-        }); //TODO - REMOVE CREDENTIALS FROM SOURCE CODE.
+        });
     }
 }

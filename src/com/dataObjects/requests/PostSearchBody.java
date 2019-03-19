@@ -44,7 +44,8 @@ public class PostSearchBody {
         this.properties = properties;
         this.types = types;
         this.where = new PostWhere(conditions, operator);
-        //Just setting pageSize to 1000 for now
+
+        //Just setting pageSize to 1000 for now. Can be adjusted for use of paging when more resources in IGC.
         this.pageSize = 1000;
     }
 
