@@ -15,34 +15,35 @@ import java.util.Map;
  */
 public class Utility {
 
-    /**
-     * Correctly formats parameters for an http request
-     *
-     * @param params A Hash Map of parameter (key, value) pairs.
-     * @return returns a correctly formatted String of parameters
-     * @throws UnsupportedEncodingException:
-     */
-    public static String getParamString(Map<String, String> params)
-            throws UnsupportedEncodingException {
-        StringBuilder result = new StringBuilder();
-
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-            result.append("&");
-        }
-
-        String resultString = result.toString();
-        return resultString.length() > 0
-                ? resultString.substring(0, resultString.length() - 1)
-                : resultString;
-    }
+//    /**
+//     * Correctly formats parameters for an http request
+//     *
+//     * @param params A Hash Map of parameter (key, value) pairs.
+//     * @return returns a correctly formatted String of parameters
+//     * @throws UnsupportedEncodingException:
+//     */
+//    public static String getParamString(Map<String, String> params)
+//            throws UnsupportedEncodingException {
+//        StringBuilder result = new StringBuilder();
+//
+//        for (Map.Entry<String, String> entry : params.entrySet()) {
+//            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+//            result.append("=");
+//            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+//            result.append("&");
+//        }
+//
+//        String resultString = result.toString();
+//        return resultString.length() > 0
+//                ? resultString.substring(0, resultString.length() - 1)
+//                : resultString;
+//    }
 
     /**
      * Disables SSL Verification for HttpsURLConnection.
+     * @throws IllegalStateException:
      */
-    public static void disableSslVerification() {
+    public static void disableSslVerification() throws IllegalStateException {
         try
         {
             // Create a trust manager that does not validate certificate chains
@@ -73,19 +74,21 @@ public class Utility {
             System.out.println("Disabling SSL Verification...");
             HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
         } catch (Exception e) {
+            // Shouldnt even happen, just being safe.
             e.printStackTrace();
+            throw new IllegalStateException(); //Throw runtime exception
         }
     }
 
     /**
-     * Accepts a username and password and sets the default authentication for
-     *      HttpURLConnection objects.
-     *
+     * Set the default username and password for HTTP requests.
+     * @param username username.
+     * @param password password.
      */
-    public static void authenticate() {
+    public static void authenticate(String username, String password) {
         Authenticator.setDefault (new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication ("igc.api.user", "igc.api.user".toCharArray());
+                return new PasswordAuthentication (username, password.toCharArray());
             }
         }); //TODO - REMOVE CREDENTIALS FROM SOURCE CODE.
     }

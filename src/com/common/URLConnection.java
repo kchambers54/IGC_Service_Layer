@@ -30,21 +30,57 @@ public class URLConnection {
      */
     private List<String> postSearchTypes;
 
+    private String username;
+    private String password;
+
+    //// Constructors ////
+
     /**
      * Create a new URLConnection object.
      * Default POST search types are defined here.
      * @param url: HTTP URL to make requests to. Include domain name, port,
      *           and general extension that will be used for all requests.
      *           Education test IGC API: 'https://ec2-3-83-75-69.compute-1.amazonaws.com:9443/ibm/iis/igc-rest/v1/'
+     * @throws IllegalStateException: Thrown by Utility.disableSslVerification().
      */
-    public URLConnection(String url) {
+    public URLConnection(String url, boolean disableSslVerification) throws IllegalStateException {
         this.urlString = url;
-        // Disable ssl verification (Workaround) //
-        Utility.disableSslVerification();
+        // Disable disableSsl verification (Workaround) //
+        if (disableSslVerification) {
+            Utility.disableSslVerification();
+        }
         // Define default POST search return types
         String[] searchTypes = {"category", "term"};  // This can be changed as more Resource types are added.
         this.postSearchTypes = Arrays.asList(searchTypes);
     }
+
+    /**
+     * Create a new URLConnection object.
+     * Default POST search types are defined here.
+     * @param url: HTTP URL to make requests to. Include domain name, port,
+     *           and general extension that will be used for all requests.
+     *           Education test IGC API: 'https://ec2-3-83-75-69.compute-1.amazonaws.com:9443/ibm/iis/igc-rest/v1/'
+     * @throws IllegalStateException: Thrown by Utility.disableSslVerification().
+     */
+    public URLConnection(String url, boolean disableSslVerification, String username, String password)
+            throws IllegalStateException {
+        this.urlString = url;
+        // Disable disableSsl verification (Workaround) //
+        if (disableSslVerification) {
+            Utility.disableSslVerification();
+        }
+        // Define default POST search return types
+        String[] searchTypes = {"category", "term"};  // This can be changed as more Resource types are added.
+        this.postSearchTypes = Arrays.asList(searchTypes);
+
+        // Set default authentication credentials.
+        this.username = username;
+        this.password = password;
+        Utility.authenticate(this.username, this.password);
+    }
+
+    ////// END CONSTRUCTORS ///////
+    //// BEGIN REQUEST METHODS ////
 
     /**
      * Make an Http Request without a body.  Generally called to make GET requests
@@ -52,21 +88,15 @@ public class URLConnection {
      *
      * @param url: Full URL to make request to (not a String).
      * @param method: HttpMethod Enum (GET, PUT, POST, DELETE)
-     * @param useAuth Set to true if sending request to IGC API. This enables the required authentication.
      * @return String of HTTP response.
-     * @throws IOException:
+     * @throws IOException: Thrown by JsonResponseBuilder.getResponseObject()
      */
-    private Response makeHttpRequest(URL url, HttpMethod method, boolean useAuth) throws IOException {
+    private Response makeHttpRequest(URL url, HttpMethod method) throws IOException {
         // Establish connection and request method //
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(method.name());
         connection.setConnectTimeout(5000);
         connection.setReadTimeout(5000);
-
-        // Enable Authentication if desired //
-        if (useAuth) {
-            Utility.authenticate();
-        }
 
         // If sending output //
         connection.setDoOutput(true);
@@ -98,22 +128,18 @@ public class URLConnection {
      *
      * @param url URL at which to make the request.
      * @param method: HttpMethod Enum (GET, PUT, POST, DELETE)
-     * @param useAuth Set to true if sending request to IGC API. This enables the required authentication
      * @param requestBody Resource to be formatted into the body of the request.
      * @return Response object of HTTP response message and ID if any new resource that was created.
-     * @throws IOException:
+     * @throws IOException: Thrown by JsonResponseBuilder.getResponseObject()
      */
-    private Response makeHttpRequest(URL url, HttpMethod method, boolean useAuth, Object requestBody) throws IOException {
+    private Response makeHttpRequest(URL url, HttpMethod method, Object requestBody) throws IOException {
         // Establish connection and request method //
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(method.name());
         connection.setConnectTimeout(5000);
         connection.setReadTimeout(5000);
 
-        // Enable Authentication if desired //
-        if (useAuth) {
-            Utility.authenticate();
-        }
+        Utility.authenticate(this.username, this.password);
 
         // Setting Request Headers //
         connection.setRequestProperty("Content-Type", "application/json");
@@ -164,15 +190,17 @@ public class URLConnection {
         return JsonResponseBuilder.getResponseObject(connection); //Use this to return a Response object.
     }
 
-    //// GET METHODS ////
+    //// END REQUEST METHODS ////
+
+    //////// GET METHODS ////////
 
     /**
      * Submit a GET request to the URL associated with the URLConnection object.
      * @param extension: Extension to be appended to the object URL for a specific GET request.
      *                 Leave extension as an empty string if none is desired.
-     * @throws Exception:
+     * @throws IOException: Thrown by makeHttpRequest()
      */
-    public String get(String extension, boolean useAuth) throws Exception {
+    public String get(String extension, boolean useAuth) throws IOException {
         String urlWithExtension = this.urlString + extension;
         System.out.println("get method called for URL: " + urlWithExtension);
         URL getUrl = new URL(urlWithExtension);
@@ -183,9 +211,10 @@ public class URLConnection {
      * Submit a GET request expecting a TERM in return.
      * @param extension ID of Term to request (URL extension for GET request).
      * @return a Term object representing the received JSON.
-     * @throws Exception:
+     * @throws IOException: Thrown by makeHttpRequest()
+     * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
      */
-    public Term getIGCTermById(String extension) throws Exception {
+    public Term getIGCTermById(String extension) throws IOException, IllegalArgumentException {
         String urlWithExtension = this.urlString + "assets/" + extension;
         System.out.println("getIGCTermById called for URL: " + urlWithExtension);
         URL getUrl = new URL(urlWithExtension);
@@ -195,12 +224,13 @@ public class URLConnection {
     }
 
     /**
-     * Submit a GET request expecting a Category in return.
+     * Submit a GET request expecting a CATEGORY in return.
      * @param extension ID of category to request (URL extension for GET request).
      * @return a Category object representing the received JSON.
-     * @throws Exception:
+     * @throws IOException: Thrown by makeHttpRequest()
+     * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
      */
-    public Category getIGCCategoryById(String extension) throws Exception {
+    public Category getIGCCategoryById(String extension) throws IOException, IllegalArgumentException {
         String urlWithExtension = this.urlString + "assets/" + extension;
         System.out.println("getIGCCategoryById called for URL: " + urlWithExtension);
         URL getUrl = new URL(urlWithExtension);
@@ -213,9 +243,9 @@ public class URLConnection {
      * Get the ID of a Category's parent category.
      * @param id ID of Category to look up parent's ID.
      * @return String of parent category's ID.
-     * @throws Exception:
+     * @throws IOException: Thrown by makeHttpRequest()
      */
-    public String getCategoryParentId(String id) throws Exception {
+    public String getCategoryParentId(String id) throws IOException {
         return this.getIGCCategoryById(id).getParent_category().get_id();
     }
 
@@ -223,9 +253,9 @@ public class URLConnection {
      * Get the ID of a Term's parent category.
      * @param id ID of Category to look up parent's ID.
      * @return String of parent category's ID.
-     * @throws Exception:
+     * @throws IOException: Thrown by makeHttpRequest()
      */
-    public String getTermParentId(String id) throws Exception {
+    public String getTermParentId(String id) throws IOException {
         return this.getIGCTermById(id).getParent_category().get_id();
     }
 
@@ -233,9 +263,10 @@ public class URLConnection {
      * Submit a GET request search of all IGC categories.
      * @param pageSize How many categories to return.
      * @return An IGCItemList containing a list of categories (IGCItems) and paging info.
-     * @throws Exception:
+     * @throws IOException: Thrown by makeHttpRequest()
+     * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
      */
-    public IGCItemList getIGCCategoryList(int pageSize) throws Exception {
+    public IGCItemList getIGCCategoryList(int pageSize) throws IOException, IllegalArgumentException {
         String urlWithExtension = this.urlString + "search?types=category&pageSize=" + pageSize;
         URL getUrl = new URL(urlWithExtension);
         try {
@@ -251,9 +282,10 @@ public class URLConnection {
      * Submit a GET request of all IGC terms.
      * @param pageSize How many terms to return
      * @return An IGCItemList containing a list of terms (IGCItems) and paging info.
-     * @throws Exception:
+     * @throws IOException: Thrown by makeHttpRequest()
+     * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
      */
-    public IGCItemList getIGCTermList(int pageSize) throws Exception {
+    public IGCItemList getIGCTermList(int pageSize) throws IOException {
         String urlWithExtension = this.urlString + "search?types=term&pageSize=" + pageSize;
         URL getUrl = new URL(urlWithExtension);
         try {
@@ -275,18 +307,18 @@ public class URLConnection {
      * @param updateResource IGC object (Term, Category, etc) whose properties will be applied to an
      *                       existing term in the IGC API.
      * @return Response object from the API request.
-     * @throws Exception:
-     *
+     * @throws IOException: Thrown by makeHttpRequest()
+     * Note:
      *  - Seems that getting a Resource from the API, changing a field and then using that Resource
      *    here as an argument causes a server error.
      *  - May have something to do with PUTing a Resource object with API set fields.
      *  - Can instead create an empty term object, using setters to add updated field values.
      */
-    public Response updateIGCResource(String id, IGCResource updateResource) throws Exception {
+    public Response updateIGCResource(String id, IGCResource updateResource) throws IOException {
         String urlWithExtension = this.urlString + "assets/" + id;
         URL putUrl = new URL(urlWithExtension);
         try {
-            Response response = makeHttpRequest(putUrl, HttpMethod.PUT, true, updateResource);
+            Response response = makeHttpRequest(putUrl, HttpMethod.PUT, updateResource);
             return response;
         } catch (Exception e) {
             e.printStackTrace();
@@ -299,9 +331,9 @@ public class URLConnection {
      * @param id ID of the term to update.
      * @param name New name for the term.
      * @return Response object from the API request.
-     * @throws Exception:
+     * @throws IOException: Thrown by makeHttpRequest()
      */
-    public Response updateIGCTermName(String id, String name) throws Exception {
+    public Response updateIGCTermName(String id, String name) throws IOException {
         Term updateTerm = new Term();
         updateTerm.setName(name);
         return this.updateIGCResource(id, updateTerm);
@@ -312,9 +344,9 @@ public class URLConnection {
      * @param id ID of the term to update.
      * @param name New name for the term.
      * @return Response object from the API request.
-     * @throws Exception:
+     * @throws IOException: Thrown by makeHttpRequest()
      */
-    public Response updateIGCCategoryName(String id, String name) throws Exception {
+    public Response updateIGCCategoryName(String id, String name) throws IOException {
         Category updateCategory = new Category();
         updateCategory.setName(name);
         return this.updateIGCResource(id, updateCategory);
@@ -327,13 +359,13 @@ public class URLConnection {
      *
      * @param newResource IGCResource object to POST to the API.
      * @return Response String from the API request
-     * @throws Exception:
+     * @throws IOException: thrown by makeHttpRequest()
      */
-    public Response createIGCResource(IGCResource newResource) throws Exception {
+    public Response createIGCResource(IGCResource newResource) throws IOException {
         String urlWithExtension = this.urlString + "assets/";
         URL postUrl = new URL(urlWithExtension);
         try {
-            Response response = makeHttpRequest(postUrl, HttpMethod.POST, true, newResource);
+            Response response = makeHttpRequest(postUrl, HttpMethod.POST, newResource);
             return response;
         } catch (Exception e) {
             e.printStackTrace();
@@ -348,9 +380,9 @@ public class URLConnection {
      * @param conditions List(PostCondition) of PostCondition objects, each of which define a search condition.
      * @param operator Boolean operator ('or', 'and') for search conditions.
      * @return A Response object, containing the JSON message and response code/message.
-     * @throws Exception:
+     * @throws IOException: thrown by makeHttpRequest()
      */
-    public Response searchIGC (List<String> types, List<PostCondition> conditions, String operator) throws Exception {
+    public Response searchIGC (List<String> types, List<PostCondition> conditions, String operator) throws IOException {
         String urlWithExtension = this.urlString + "search/";
         URL postUrl = new URL(urlWithExtension);
 
@@ -360,7 +392,7 @@ public class URLConnection {
         List<String> propertiesList = Arrays.asList(properties);
         try {
             PostSearchBody searchBody = new PostSearchBody(propertiesList, types, conditions, operator);
-            return makeHttpRequest(postUrl, HttpMethod.POST, true, searchBody);
+            return makeHttpRequest(postUrl, HttpMethod.POST, searchBody);
         } catch (Exception e) {
             System.err.println("Error during POST search request to IGC API. Method: (searchIGC)\n" +
                     "Ensure API is available.\n");
@@ -373,9 +405,10 @@ public class URLConnection {
      * Search the IGC API for resources that contain the entered searchTerm in their name, descriptions, ...
      * @param searchTerm String to search for in IGC Resources
      * @return IGCItemList of search results.
-     * @throws Exception:
+     * @throws IOException: thrown by makeHttpRequest()
+     * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
      */
-    public IGCItemList searchIGCResource(String searchTerm) throws Exception {
+    public IGCItemList searchIGCResource(String searchTerm) throws IOException, IllegalArgumentException {
         // Set up search conditions
         PostCondition nameCondition = new PostCondition("name", "like %{0}%", searchTerm);
         PostCondition sDescCondition = new PostCondition("short_description", "like %{0}%", searchTerm);
@@ -383,8 +416,8 @@ public class URLConnection {
 
         List<PostCondition> conditions = new ArrayList<>();
         conditions.add(nameCondition);
-        conditions.add(sDescCondition);
-        conditions.add(lDescCondition);
+//        conditions.add(sDescCondition);
+//        conditions.add(lDescCondition);
 
         Response response = searchIGC(this.postSearchTypes, conditions, "or");
         return JsonToObject.toIGCItemList(response.getMessage());
@@ -395,9 +428,10 @@ public class URLConnection {
      * Abstraction of searchIGC method.
      * @param name Name to search for.
      * @return IGCItemList of search results.
-     * @throws Exception:
+     * @throws IOException: thrown by makeHttpRequest()
+     * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
      */
-    public IGCItemList searchIGCResourceName(String name) throws Exception {
+    public IGCItemList searchIGCResourceName(String name) throws IOException, IllegalArgumentException {
         // Set up search conditions
         PostCondition nameCondition = new PostCondition("name", "like %{0}%", name);
         List<PostCondition> conditions = new ArrayList<>();
@@ -412,9 +446,10 @@ public class URLConnection {
      * @param min lower bound UNIX time in milliseconds.
      * @param max uppder bound UNIX time in milliseconds.
      * @return IGCItemList of search results.
-     * @throws Exception:
+     * @throws IOException: thrown by makeHttpRequest()
+     * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
      */
-    public IGCItemList searchIGCResourceModifiedBetween(long min, long max) throws Exception {
+    public IGCItemList searchIGCResourceModifiedBetween(long min, long max) throws IOException, IllegalArgumentException {
         // Set up search conditions
         PostCondition nameCondition = new PostCondition("modified_on", "between",
                 null, false, min, max);
@@ -430,16 +465,17 @@ public class URLConnection {
      * Abstraction of searchIGC method.
      * @param name Name of the user to search resources for.
      * @return IGCItemList of search results.
-     * @throws Exception:
+     * @throws IOException: thrown by makeHttpRequest()
+     * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
      */
-    public IGCItemList searchIGCResourceByUser(String name) throws Exception {
+    public IGCItemList searchIGCResourceByUser(String name) throws IOException, IllegalArgumentException {
         // Set up search conditions
         PostCondition modCondition = new PostCondition("modified_by", "like %{0}%", name);
-        PostCondition createCondition = new PostCondition("created_by", "like &{0}%", name);
+        PostCondition createCondition = new PostCondition("created_by", "like %{0}%", name);
 
         List<PostCondition> conditions = new ArrayList<>();
         conditions.add(modCondition);
-        conditions.add(createCondition);
+//        conditions.add(createCondition);
 
         Response response = searchIGC(this.postSearchTypes, conditions, "or");
         return JsonToObject.toIGCItemList(response.getMessage());
@@ -450,9 +486,10 @@ public class URLConnection {
      * @param property Property to search the IGC API for (name, parent_category, parent_category._id, etc).
      * @param name Search term.
      * @return IGCItemList of search results.
-     * @throws Exception:
+     * @throws IOException: thrown by makeHttpRequest()
+     * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
      */
-    public IGCItemList searchIGCResourceCustom(String property, String name) throws Exception {
+    public IGCItemList searchIGCResourceCustom(String property, String name) throws IOException, IllegalArgumentException {
         // Set up search conditions
         PostCondition custCondition = new PostCondition(property, "like %{0}%", name);
 
@@ -463,18 +500,34 @@ public class URLConnection {
         return JsonToObject.toIGCItemList(response.getMessage());
     }
 
+    /**TODO Test
+     * Returns an IGCItemList of all Resources that are missing a given property.
+     * @return IGCItemList of search results
+     * @throws IOException: IOException thrown by makeHttpRequest()
+     * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
+     */
+    public IGCItemList searchIGCResourceNullProp(String property) throws IOException, IllegalArgumentException {
+        PostCondition condition = new PostCondition(property, "isNull", null);
+
+        List<PostCondition> conditions = new ArrayList<>();
+        conditions.add(condition);
+
+        return JsonToObject.toIGCItemList(searchIGC(this.postSearchTypes, conditions, "or").getMessage());
+    }
+
     //// DELETE METHODS - Delete ////
 
     /**
      * Delete an IGCResource by its unique ID (cannot be undone!)
      * @param id ID of resource to delete.
      * @return Response object with message and response code returned by HTTP DELETE request.
+     * @throws IOException: IOException thrown by makeHttpRequest()
      */
-    public Response deleteIGCResource(String id) throws Exception {
+    public Response deleteIGCResource(String id) throws IOException {
         String urlWithExtension = this.urlString + "assets/" + id;
         URL deleteUrl = new URL(urlWithExtension);
         try {
-            Response response = makeHttpRequest(deleteUrl, HttpMethod.DELETE, true, null);
+            Response response = makeHttpRequest(deleteUrl, HttpMethod.DELETE, null);
             return response;
         } catch (Exception e) {
             e.printStackTrace();
