@@ -10,10 +10,25 @@ import java.io.Serializable;
  */
 public class IGCPaging implements Serializable {
 
+    /**
+     * Total number of items in associated list.
+     */
     private int numTotal;
+    /**
+     * link to next page.
+     */
     private String next;
+    /**
+     * Page size.
+     */
     private int pageSize;
+    /**
+     * Index of last item on this page.
+     */
     private int end;
+    /**
+     * Index of first item on this page.
+     */
     private int begin;
 
     /**

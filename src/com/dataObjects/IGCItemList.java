@@ -11,7 +11,13 @@ import java.util.ArrayList;
  */
 public class IGCItemList {
 
+    /**
+     * Object containing paging data for this IGCItemList.
+     */
     private IGCPaging paging;
+    /**
+     * ArrayList of IGCItems.
+     */
     private ArrayList<IGCItem> items;
 
 

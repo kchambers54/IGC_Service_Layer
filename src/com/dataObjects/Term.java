@@ -43,18 +43,20 @@ public class Term extends IGCResource implements Serializable {
     private String example;
     private IGCItemList stewards;
     private String usage;
-    private IGCItemList has_types; //TODO - What is this?
-    private IGCItemList is_a_type_of; //TODO - What is this?
+    private IGCItemList has_types;
+    private IGCItemList is_a_type_of;
 
-    // Custom Fields - TODO: Should allow for more to be added. Not uniform across current terms.
-    //TODO - Perhaps make an object that contains all of these?
+    // Custom Fields - Not uniform across all terms.
+    //  - Considered making an object that contains all of these.
+    //    -> Would mess up JSON formatting when converted to String to PUT or POST to API...
+    // TODO *** Will need to add more fields here whenever a new custom field is added to IGC. ***
     private String custom_Owner;
     private ArrayList<String> custom_Organization;
     private String custom_Database_Name;
     private ArrayList<String> custom_Business_Types;
 
     // Possibly only set within API.
-    private String type; //TODO - What is this?
+    private String type;
     private String is_modifier;
 
     // Only set within IGC API, never by constructors.

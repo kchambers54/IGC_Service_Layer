@@ -9,21 +9,46 @@ import java.util.ArrayList;
 /**
  * Java Bean class to hold the properties of an "Item" returned from the
  * IGC API.
- * These items are returned as references to Terms and Categories, and are used
- * in "_context", "category_path", "has_type", "parent_category", (etc...)
- * fields in API JSON response.
+ * These items are:
+ *  - Returned as references to Terms and Categories in search results
+ *  - Are used to populate "_context", "category_path", "has_type",
+ *      "parent_category", (etc...) lists in an API response for a Term or Category.
  */
 public class IGCItem implements Serializable {
 
+    /**
+     * Name of resource
+     */
     private String _name;
+    /**
+     * Context of resource (list of parents).
+     */
     private ArrayList<IGCItem> _context; //Optional field used in search result items.
+    /**
+     * Resource type (term, category, etc...)
+     */
     private String _type;
+    /**
+     * id of full resource.
+     */
     private String _id;
+    /**
+     * url at which this full resource can be found.
+     */
     private String _url;
 
-    // Optional Fields used for certain POST search results.
+    // Optional Fields used in list for certain POST search results. //
+    /**
+     * Date last modified.  If never modified, set to creation date.
+     */
     private String modified_on;
+    /**
+     * Short description of resource
+     */
     private String short_description;
+
+
+    //// Constructors ////
 
     /**
      * No argument Constructor.

@@ -9,6 +9,9 @@ public class Args {
     @Parameter(names = {"--help", "-h"} ,help = true)
     private boolean help = false;
 
+    @Parameter(names = {"--debug", "-d"}, description = "enables verbose debugging")
+    private boolean debug = false;
+
     @Parameter(names = "-url", description = "URL to base all requests from. Default is IGC API", order=0)
     private String url = "https://ec2-3-83-75-69.compute-1.amazonaws.com:9443/ibm/iis/igc-rest/v1/";
 
@@ -23,6 +26,10 @@ public class Args {
 
     public boolean isHelp() {
         return help;
+    }
+
+    public boolean isDebug() {
+        return debug;
     }
 
     public String getUrl() {

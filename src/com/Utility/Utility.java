@@ -2,6 +2,9 @@
 
 package com.Utility;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.net.ssl.*;
 import java.io.UnsupportedEncodingException;
 import java.net.Authenticator;
@@ -14,6 +17,10 @@ import java.util.Map;
  * A utility class containing various static methods.
  */
 public class Utility {
+    /**
+     * Initialize SLF4J logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(Utility.class);
 
 //    /**
 //     * Correctly formats parameters for an http request
@@ -71,7 +78,7 @@ public class Utility {
             };
 
             // Install the all-trusting host verifier
-            System.out.println("Disabling SSL Verification...");
+            logger.info("Disabling SSL Verification...");
             HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
         } catch (Exception e) {
             // Shouldnt even happen, just being safe.
@@ -86,6 +93,7 @@ public class Utility {
      * @param password password.
      */
     public static void authenticate(String username, String password) {
+        logger.info("Applying authentication credentials...");
         Authenticator.setDefault (new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication (username, password.toCharArray());
