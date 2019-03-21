@@ -2,6 +2,7 @@ package com.dataObjects;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -49,11 +50,17 @@ public class Category extends IGCResource implements Serializable {
      */
     private String _url;
 
-    // Custom Fields - Not uniform across all terms.
+    // NOTES ON CUSTOM FIELDS:
     //  - Considered making an object that contains all of these.
     //    -> Would mess up JSON formatting when converted to String to PUT or POST to API...
     // TODO *** Will need to add more fields here whenever a new custom field is added to IGC. ***
-    private String custom_Contains_PII; //TODO Has a space in name within IGC. Need workaround for importing.
+    // TODO --> Be sure to add a '@SerializedName' annotation to any field that does not perfectly
+    //          --- match its IGC counterpart (see 'custom_Contains_PII').
+
+    /**
+     * This annotation denotes a different name within IGC (to account for spaces).
+     */
+    @SerializedName("custom_Contains PII") private String custom_Contains_PII;
     private String custom_Owner;
     private ArrayList<String> custom_Organization;
 

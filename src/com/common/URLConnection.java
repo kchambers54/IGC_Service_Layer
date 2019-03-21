@@ -236,8 +236,12 @@ public class URLConnection {
         URL getUrl = new URL(urlWithExtension);
 
         try {
-            String receivedString = makeHttpRequest(getUrl, HttpMethod.GET, true).getMessage();
-            return JsonToObject.toTerm(receivedString);
+            String receivedMessage = makeHttpRequest(getUrl, HttpMethod.GET, true).getMessage();
+            if (JsonToObject.toTypeContainer(receivedMessage).get_type().equals("term")) {
+                return JsonToObject.toTerm(receivedMessage);
+            } else {
+                throw new IllegalArgumentException("Called getIGCTermById on a non-term.");
+            }
         } catch (Exception e) {
             logger.error("makeHttpRequest failed when called from getIGCTermById()");
             e.printStackTrace();
@@ -259,8 +263,12 @@ public class URLConnection {
         URL getUrl = new URL(urlWithExtension);
 
         try {
-            String receivedString = makeHttpRequest(getUrl, HttpMethod.GET, true).getMessage();
-            return JsonToObject.toCategory(receivedString);
+            String receivedMessage = makeHttpRequest(getUrl, HttpMethod.GET, true).getMessage();
+            if (JsonToObject.toTypeContainer(receivedMessage).get_type().equals("category")) {
+                return JsonToObject.toCategory(receivedMessage);
+            } else {
+                throw new IllegalArgumentException("Called getIGCCategoryById on a non-category.");
+            }
         } catch (Exception e) {
             logger.error("makeHttpRequest failed when called from getIGCCategoryById()");
             e.printStackTrace();
@@ -324,7 +332,7 @@ public class URLConnection {
         if (isResourceOfType(id, "term")) {
             return this.getIGCTermById(id).getParent_category().get_id();
         } else {
-            throw new IllegalArgumentException("Attempted to call getTermParentId() on a category");
+            throw new IllegalArgumentException("Attempted to call getTermParentId() on a non-term.");
         }
     }
 
@@ -339,7 +347,7 @@ public class URLConnection {
         if (isResourceOfType(id, "category")) {
             return this.getIGCCategoryById(id).getParent_category().get_id();
         } else {
-            throw new IllegalArgumentException("Attempted to call getCategoryParentId() on a Term");
+            throw new IllegalArgumentException("Attempted to call getCategoryParentId() on a non-category.");
         }
     }
 

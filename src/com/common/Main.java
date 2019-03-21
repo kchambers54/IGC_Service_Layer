@@ -79,7 +79,7 @@ public class Main {
 
             //// TEST 3 - Perform a IGC GET request and convert ////
             //// the JSON response to a Java object (a Term).  ////
-            logger.info("---- BEGINNING TEST3 ----\n");
+            logger.info("---- BEGINNING TEST3: getIGCResourceById to get Term\n");
             // Call the getIGCResourceById method on a Term's ID.
             IGCResource termTest = connection.getIGCResourceById(
                     "6662c0f2.e1b1ec6c.00t6i4b9s.oc1te9k.igov6t.hqctlblmgp8tjbb6ad4el"
@@ -94,7 +94,7 @@ public class Main {
 
             //// TEST 4 - Perform a IGC GET request and convert ////
             //// the JSON response to a Java object (a Category).  ////
-            logger.info("---- BEGINNING TEST4 ----\n");
+            logger.info("---- BEGINNING TEST4: getIGCResourceById to get category\n");
             // Call the getIGCResourceById method on a category's ID.
             IGCResource categoryTest = connection.getIGCResourceById(
                     "6662c0f2.ee6a64fe.00t6i4b6l.2q3r1c0.javi8g.f6vf7ssaf75b7ed3btpqr"
@@ -108,7 +108,7 @@ public class Main {
             test_num++;
 
             //// TEST 5 - Perform a IGC GET request of all categories. ////
-            logger.info("---- BEGINNING TEST5 ----\n");
+            logger.info("---- BEGINNING TEST5: getIGCCategoryList()\n");
             // Call the getIGCCategoryList method for the object, entering how many items we want returned.
             IGCItemList categoryList = connection.getIGCCategoryList(100);
             logger.debug("CategoryList received\n" + categoryList.toString());
@@ -119,7 +119,7 @@ public class Main {
             test_num++;
 
             //// TEST 6 - Perform a IGC GET request of all terms. ////
-            logger.info("---- BEGINNING TEST6 ----\n");
+            logger.info("---- BEGINNING TEST6: getIGCItemList()\n");
             // Call the getIGCTermList method for the object, entering how many items we want returned.
             IGCItemList termList = connection.getIGCTermList(100);
             logger.debug("termList object generated\n" + termList.toString());
@@ -130,7 +130,7 @@ public class Main {
             test_num++;
 
             //// TEST 7 - POST a new category. ////
-            logger.info("---- BEGINNING TEST7 ----\n");
+            logger.info("---- BEGINNING TEST7: Create new Category (Data Dictionary as parent)\n");
             //Create the new Category object with parent: "Data Directory".
             Category newCategory = new Category(
                     "a_test_cat_1", "Test category created via API",
@@ -149,7 +149,7 @@ public class Main {
             test_num++;
 
             //// TEST 8 - POST a new term. ////
-            logger.info("---- BEGINNING TEST8 ----\n");
+            logger.info("---- BEGINNING TEST8: Create new Term (DataDictionary as parent)\n");
             //Create the new Term object with parent: "Data Directory".
             Term newTerm = new Term(
                     "a_test_term_1", "Test term created via API",
@@ -170,7 +170,7 @@ public class Main {
 
             //// TEST 9 - PUT a term update. ////
             if (postResponse2.getResponseCode() < 300) {
-                logger.info("---- BEGINNING TEST9 ----\n");
+                logger.info("---- BEGINNING TEST9: Update the Term we created in test8\n");
                 //Create the new Term object with only the fields we're updating filled out.
                 Term updateTerm = new Term(
                         "a_test_term_1_UPDATE", "UPDATED SHORT DESCRIPTION",
@@ -197,7 +197,7 @@ public class Main {
 
             //// TEST 10 - PUT a category update. ////
             if (postResponse1.getResponseCode() < 300) {
-                logger.info("---- BEGINNING TEST10 ----\n");
+                logger.info("---- BEGINNING TEST10: Update the Category we created in test7\n");
                 //Create the new Category object.
                 Category updateCategory = new Category(
                         "a_test_category_1_UPDATE", "UPDATED SHORT DESCRIPTION",
@@ -222,7 +222,7 @@ public class Main {
 
             //// TEST 11 - DELETE a category. ////
             if (postResponse1.getResponseCode() < 300) {
-                logger.info("---- BEGINNING TEST11 ----\n");
+                logger.info("---- BEGINNING TEST11: Delete the Category we created in test7\n");
                 String idToDelete1 = postResponse1.get_id(); //Get ID of category we created
                 // Call the deleteIGCResource method with the ID of the Category we created.
                 Response deleteResponse1 = connection.deleteIGCResource(idToDelete1);
@@ -240,7 +240,7 @@ public class Main {
 
             //// TEST 12 - DELETE a term. ////
             if (postResponse2.getResponseCode() < 300) {
-                logger.info("---- BEGINNING TEST12 ----\n");
+                logger.info("---- BEGINNING TEST12: Delete the Term we created in test8\n");
                 String idToDelete2 = postResponse2.get_id(); //Get ID of term we created
                 // Call the deleteIGCResource method with the ID of the term we created.
                 Response deleteResponse2 = connection.deleteIGCResource(idToDelete2);
@@ -257,7 +257,7 @@ public class Main {
             test_num++;
 
             //// TEST 13 - POST Search for a resource by name ////
-            logger.info("---- BEGINNING TEST13 ----\n");
+            logger.info("---- BEGINNING TEST13: Search for Resources with name=test\n");
             // Call the search method and get a response
             logger.debug("Submitting search request for resources with 'test' in name");
             IGCItemList itemList13 = connection.searchIGCResourceName("test");
@@ -268,14 +268,14 @@ public class Main {
             test_num++;
 
             //// TEST 14 - POST Search for a resource modified between two date-times ////
-            logger.info("---- BEGINNING TEST14 ----\n");
+            logger.info("---- BEGINNING TEST14: Search for Resources modified between 2019/01/01 and 2019/02/01\n");
             // Get current time.
             long curTime = new Date().getTime();
             // Call the search method and get a response
             logger.debug("Submitting search request for resources modified between two times");
             IGCItemList itemList14 = connection.searchIGCResourceModifiedBetween(
-                    "2019/03/15 00:00:00",
-                    "2019/03/20 00:00:00"
+                    "2019/01/01 00:00:00",
+                    "2019/02/01 00:00:00"
             );
             //Print results
             logger.info("Number of search results: " + itemList14.getPaging().getNumTotal() + "\n");
@@ -284,7 +284,7 @@ public class Main {
             test_num++;
 
             //// TEST 15 - POST Search for a resource by search term ////
-            logger.info("---- BEGINNING TEST15 ----\n");
+            logger.info("---- BEGINNING TEST15: Search for Resources by search term 'test'\n");
             // Call the search method and get a response
             logger.debug("Submitting search request for search term: test");
             IGCItemList itemList15 = connection.searchIGCResource("test");
@@ -295,7 +295,7 @@ public class Main {
             test_num++;
 
             //// TEST 16 - POST Search for a resource by user ////
-            logger.info("---- BEGINNING TEST16 ----\n");
+            logger.info("---- BEGINNING TEST16: Search for Resources by user: 'API'\n");
             // Call the search method and get a response
             logger.debug("Submitting search request by user");
             IGCItemList itemList16 = connection.searchIGCResourceByUser("API");
@@ -305,8 +305,8 @@ public class Main {
             //// END TEST 16 ////
             test_num++;
 
-            //// TEST 17 ////
-            logger.info("---- BGINNING TEST17 ----");
+            //// TEST 17 - Test isResourceOfType() on 'Data Dictionary'////
+            logger.info("---- BEGINNING TEST17: Test isResourceOfType to confirm that 'Data Dictionary' is a Category");
             boolean result17 = connection.isResourceOfType(
                     "6662c0f2.ee6a64fe.00t6cc6op.9eo1d2k.skhof8.dgog8qrnvlvm4pglk887k", //ID of 'Data Dictionary'
                     "category");
