@@ -145,7 +145,7 @@ public class URLConnection {
         // Establish connection and request method //
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(method.name());
-        connection.setConnectTimeout(5000);
+        connection.setConnectTimeout(5000); //Setting to 5 seconds for default.
         connection.setReadTimeout(5000);
 
         // Setting Request Headers //
@@ -205,8 +205,11 @@ public class URLConnection {
 
     /**
      * Submit a GET request to the URL associated with the URLConnection object.
+     * Does not return a Resource object like other GET based methods, simply makes a GET call with the
+     *      combined base URL and extension argument and returns the String response.
      * @param extension: Extension to be appended to the object URL for a specific GET request.
      *                 Leave extension as an empty string if none is desired.
+     * @deprecated  Use more specific GET methods when making calls to IGC (See URLConnection methods.)
      * @throws IOException: Thrown by makeHttpRequest()
      */
     public String get(String extension, boolean useAuth) throws IOException {
@@ -216,7 +219,7 @@ public class URLConnection {
         try {
             return makeHttpRequest(getUrl, HttpMethod.GET, useAuth).getMessage();
         } catch (Exception e) {
-            logger.error("makeHttpRequest failed when called from get()");
+            logger.error("XXX - failed get()");
             e.printStackTrace();
             throw e;
         }
@@ -224,9 +227,10 @@ public class URLConnection {
 
     /**
      * Submit a GET request expecting only a TERM in return.
+     * Use getIGCResourceById for a more general method that can return any IGCResource.
      * @param id ID of Term to request (URL extension for GET request).
-     * @return a Term object representing the received JSON.
-     * @deprecated Use getIGCResourceById()
+     * @return a Term object representing the received JSON. Returns an empty Term with failedResponse set to true
+     *         if the Term does not exist or if the server does not respond.
      * @throws IOException: Thrown by makeHttpRequest()
      * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
      */
@@ -236,14 +240,18 @@ public class URLConnection {
         URL getUrl = new URL(urlWithExtension);
 
         try {
-            String receivedMessage = makeHttpRequest(getUrl, HttpMethod.GET, true).getMessage();
-            if (JsonToObject.toTypeContainer(receivedMessage).get_type().equals("term")) {
-                return JsonToObject.toTerm(receivedMessage);
-            } else {
-                throw new IllegalArgumentException("Called getIGCTermById on a non-term.");
+            Response response = makeHttpRequest(getUrl, HttpMethod.GET, true);
+            if (response.getResponseCode() < 300) {
+                if (JsonToObject.toTypeContainer(response.getMessage()).get_type().equals("term")) { //Check if Term
+                    return JsonToObject.toTerm(response.getMessage());
+                } else {
+                    throw new IllegalArgumentException("Called getIGCTermById on a non-term.");
+                }
+            } else { // Request failed - Can add more specific handling here.
+                return new Term(true);
             }
         } catch (Exception e) {
-            logger.error("makeHttpRequest failed when called from getIGCTermById()");
+            logger.error("XXX - failed getIGCTermById()");
             e.printStackTrace();
             throw e;
         }
@@ -251,9 +259,10 @@ public class URLConnection {
 
     /**
      * Submit a GET request expecting only a CATEGORY in return.
+     * **Use getIGCResourceById for a more general method that can return any IGCResource.
      * @param id ID of category to request (URL extension for GET request).
-     * @return a Category object representing the received JSON.
-     * @deprecated Use getIGCResourceById()
+     * @return a Category object representing the received JSON. Returns an empty Category with failedResponse set
+     *         to true if the Category does not exist or if the server does not respond.
      * @throws IOException: Thrown by makeHttpRequest()
      * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
      */
@@ -263,14 +272,18 @@ public class URLConnection {
         URL getUrl = new URL(urlWithExtension);
 
         try {
-            String receivedMessage = makeHttpRequest(getUrl, HttpMethod.GET, true).getMessage();
-            if (JsonToObject.toTypeContainer(receivedMessage).get_type().equals("category")) {
-                return JsonToObject.toCategory(receivedMessage);
-            } else {
-                throw new IllegalArgumentException("Called getIGCCategoryById on a non-category.");
+            Response response = makeHttpRequest(getUrl, HttpMethod.GET, true);
+            if (response.getResponseCode() < 300) {
+                if (JsonToObject.toTypeContainer(response.getMessage()).get_type().equals("category")) { //Check if cat
+                    return JsonToObject.toCategory(response.getMessage());
+                } else {
+                    throw new IllegalArgumentException("Called getIGCCategoryById on a non-category.");
+                }
+            } else { // Request failed. Can add more specific handling here.
+                return new Category(true);
             }
         } catch (Exception e) {
-            logger.error("makeHttpRequest failed when called from getIGCCategoryById()");
+            logger.error("XXX - failed getIGCCategoryById()");
             e.printStackTrace();
             throw e;
         }
@@ -281,7 +294,8 @@ public class URLConnection {
      *      the result.
      * TODO *** New cases will need to be made as new IGC POJO class types are created ***
      * @param id ID of category to request (URL extension for GET request).
-     * @return An IGCResource object representing the received JSON.
+     * @return An IGCResource object representing the received JSON. Returns an empty Term with failedResponse set
+     *         to true if the Resource does not exist or the server does not respond.
      * @throws IOException: Thrown by makeHttpRequest()
      * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
      */
@@ -290,22 +304,25 @@ public class URLConnection {
         URL getUrl = new URL(urlWithExtension);
 
         try {
-            String receivedString = makeHttpRequest(getUrl, HttpMethod.GET, true).getMessage();
-
-            // Determine '_type' to know what POJO to cast String to.
-            String type = JsonToObject.toTypeContainer(receivedString).get_type();
-            if (type.equals("category")) {
-                return JsonToObject.toCategory(receivedString);
-            } else if (type.equals("term")) {
-                return JsonToObject.toTerm(receivedString);
-            }/*else if (type.equals("NEW_IGC_TYPE") {     // Example for when new IGC type.
+            Response response = makeHttpRequest(getUrl, HttpMethod.GET, true);
+            if (response.getResponseCode() < 300) {
+                // Determine '_type' to know what POJO to cast String to.
+                String type = JsonToObject.toTypeContainer(response.getMessage()).get_type();
+                if (type.equals("category")) {
+                    return JsonToObject.toCategory(response.getMessage());
+                } else if (type.equals("term")) {
+                    return JsonToObject.toTerm(response.getMessage());
+                }/*else if (type.equals("NEW_IGC_TYPE") {     // Example for when new IGC type.
                 return JsonTo_NEW_IGC_TYPE(receivedString);
-            } */
-            else {
-                throw new IllegalArgumentException("Attempted to GET an IGCResource for which there is no Java Object");
-            }
+                }*/ else {
+                    throw new IllegalArgumentException(
+                            "Attempted to GET an IGCResource for which there is no Java Object");
+                }
+            } else { // Can add more specific handling here...
+                return new Term(true, true); // Just returns an empty Term as a placeholder
+            }                                                   // since the type of resource to be returned is unknown.
         } catch (Exception e) {
-            logger.error("makeHttpRequest failed when called from getIGCCategoryById()");
+            logger.error("XXX - getIGCResourceById() failed");
             e.printStackTrace();
             throw e;
         }
@@ -314,7 +331,8 @@ public class URLConnection {
     /**
      * Get the ID of a Category's parent category.
      * @param id ID of Category to look up parent's ID.
-     * @return String of parent category's ID.
+     * @return String of parent category's ID. Returns empty String if ID does not exist or
+     *         if the request cannot be completed.
      * @throws IOException: Thrown by makeHttpRequest()
      */
     public String getResourceParentId(String id) throws IOException, IllegalArgumentException {
@@ -324,8 +342,9 @@ public class URLConnection {
     /**
      * Get the ID of a Term's parent category.
      * @param id ID of Term to look up parent's ID.
-     * @return String of parent category's ID.
-     * @deprecated Use getResourceParentId()
+     * @return String of parent category's ID. Returns empty String if ID does not exist or
+     *         if the request cannot be completed.
+     * @deprecated Use getResourceParentId() for a more general method that can return any IGCResource.
      * @throws IOException: Thrown by makeHttpRequest()
      */
     public String getTermParentId(String id) throws IOException, IllegalArgumentException {
@@ -339,8 +358,9 @@ public class URLConnection {
     /**
      * Get the ID of a Category's parent category.
      * @param id ID of Category to look up parent's ID.
-     * @return String of parent category's ID.
-     * @deprecated Use getResourceParentId()
+     * @return String of parent category's ID. Returns empty String if ID does not exist or
+     *         if the request cannot be completed.
+     * @deprecated Use getResourceParentId() for a more general method that can return any IGCResource.
      * @throws IOException: Thrown by makeHttpRequest()
      */
     public String getCategoryParentId(String id) throws IOException, IllegalArgumentException {
@@ -355,6 +375,7 @@ public class URLConnection {
      * Submit a GET request search of all IGC categories.
      * @param pageSize How many categories to return.
      * @return An IGCItemList containing a list of categories (IGCItems) and paging info.
+     *         Returns an empty IGCItemList with 'failedRequest' set to true if the request cannot be completed.
      * @throws IOException: Thrown by makeHttpRequest()
      * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
      */
@@ -362,10 +383,14 @@ public class URLConnection {
         String urlWithExtension = this.urlString + "search?types=category&pageSize=" + pageSize;
         URL getUrl = new URL(urlWithExtension);
         try {
-            String receivedString = makeHttpRequest(getUrl, HttpMethod.GET, true).getMessage();
-            return JsonToObject.toIGCItemList(receivedString);
-        } catch (Exception e) {
-            logger.error("makeHttpRequest failed when called from getIGCCategoryList, pageSize=" + pageSize);
+            Response response = makeHttpRequest(getUrl, HttpMethod.GET, true);
+            if (response.getResponseCode() < 300) {
+                return JsonToObject.toIGCItemList(response.getMessage());
+            } else {
+                return new IGCItemList(true);
+            }
+        } catch (IOException e) {
+            logger.error("XXX - failed getIGCCategoryList, pageSize=" + pageSize);
             e.printStackTrace();
             throw e;
         }
@@ -382,20 +407,24 @@ public class URLConnection {
         String urlWithExtension = this.urlString + "search?types=term&pageSize=" + pageSize;
         URL getUrl = new URL(urlWithExtension);
         try {
-            String receivedString = makeHttpRequest(getUrl, HttpMethod.GET, true).getMessage();
-            return JsonToObject.toIGCItemList(receivedString);
+            Response response = makeHttpRequest(getUrl, HttpMethod.GET, true);
+            if (response.getResponseCode() < 300) {
+                return JsonToObject.toIGCItemList(response.getMessage());
+            } else {
+                return new IGCItemList(true);
+            }
         } catch (IOException e) {
-            logger.error("makeHttpRequest failed when called from getIGCTermList, pageSize=" + pageSize);
+            logger.error("XXX - failed getIGCTermList, pageSize=" + pageSize);
             e.printStackTrace();
             throw e;
         }
     }
 
     /**
-     * Check if a Resource is of a certain type.
+     * Check if a Resource is of a certain type (term, category, etc...).
      * @param id ID of Resource to check.
      * @param type Type to check Resource against.
-     * @return boolean of whether Resource matches type.
+     * @return boolean of whether Resource matches type. Returns false if ID cannot be found, or if bad request.
      */
     public boolean isResourceOfType(String id, String type) throws IOException {
         String urlWithExtension = this.urlString + "assets/" + id;
@@ -403,12 +432,17 @@ public class URLConnection {
         URL getUrl = new URL(urlWithExtension);
 
         try {
-            String receivedString = makeHttpRequest(getUrl, HttpMethod.GET, true).getMessage();
-            String apiType = JsonToObject.toTypeContainer(receivedString).get_type();
-
-            return (type.equals(apiType));
+            Response response = makeHttpRequest(getUrl, HttpMethod.GET, true);
+            if (response.getResponseCode() < 300) {
+                String apiType = JsonToObject.toTypeContainer(response.getMessage()).get_type();
+                return (type.equals(apiType));
+            } else if (response.getResponseCode() == 404) { //Id could not be found.
+                return false;
+            } else {
+                return false;  // Better way to handle other errors?
+            }
         } catch (Exception e) {
-            logger.error("makeHttpRequest failed when called from isResourceOfType()");
+            logger.error("XXX - makeHttpRequest failed when called from isResourceOfType()");
             e.printStackTrace();
             throw e;
         }
@@ -429,7 +463,7 @@ public class URLConnection {
      *  - Seems that getting a Resource from the API, changing a field and then using that Resource
      *    here as an argument causes a server error.
      *  - May have something to do with PUTing a Resource object with API set fields.
-     *  - Can instead create an empty term object, using setters to add field values that are to be updated.
+     *  --> Should instead create an empty term object, using setters to add field values that are to be updated.
      */
     public Response updateIGCResource(String id, IGCResource updateResource) throws IOException {
         String urlWithExtension = this.urlString + "assets/" + id;
@@ -440,7 +474,7 @@ public class URLConnection {
             Response response = makeHttpRequest(putUrl, HttpMethod.PUT, updateResource);
             return response;
         } catch (Exception e) {
-            logger.error("makeHttpRequest failed when called from updateIGCResource()");
+            logger.error("XXX - makeHttpRequest failed when called from updateIGCResource()");
             e.printStackTrace();
             throw e;
         }
@@ -478,7 +512,7 @@ public class URLConnection {
      * Create a new IGCResource (Term, Category, etc...) in the IGC API.
      *
      * @param newResource IGCResource object to POST to the API.
-     * @return Response String from the API request
+     * @return Response object from the API request
      * @throws IOException: thrown by makeHttpRequest()
      */
     public Response createIGCResource(IGCResource newResource) throws IOException {
@@ -490,7 +524,7 @@ public class URLConnection {
             Response response = makeHttpRequest(postUrl, HttpMethod.POST, newResource);
             return response;
         } catch (Exception e) {
-            logger.error("makeHttpRequest failed when called from createIGCResource()");
+            logger.error("XXX - makeHttpRequest failed when called from createIGCResource()");
             e.printStackTrace();
             throw e;
         }
@@ -505,7 +539,8 @@ public class URLConnection {
      * @return A Response object, containing the JSON message and response code/message.
      * @throws IOException: thrown by makeHttpRequest()
      */
-    public Response searchIGC (List<String> types, List<PostCondition> conditions, String operator) throws IOException {
+    public Response searchIGC (List<String> types, List<PostCondition> conditions, String operator)
+            throws IOException, IllegalStateException {
         String urlWithExtension = this.urlString + "search/";
         URL postUrl = new URL(urlWithExtension);
 
@@ -516,7 +551,13 @@ public class URLConnection {
         try {
             PostSearchBody searchBody = new PostSearchBody(propertiesList, types, conditions, operator);
             logger.debug("Attempting to POST-search IGC with search body:\n" + searchBody);
-            return makeHttpRequest(postUrl, HttpMethod.POST, searchBody);
+            Response response =  makeHttpRequest(postUrl, HttpMethod.POST, searchBody);
+//            if (response.getResponseCode() < 300) {
+            return response;
+//            } else { //No JSON message to build a pojo from. Throw exception.
+//                throw new IllegalStateException("Received bad response when searching IGC: " +
+//                        response.getResponseCode() + " - " + response.getCodeMessage());
+//            }
         } catch (Exception e) {
             logger.error("Error during POST search request to IGC API. Method: (searchIGC)\n" +
                     "Ensure API is available.\n");
@@ -545,7 +586,11 @@ public class URLConnection {
 
         logger.info("Attempting to search for IGCResource with term: " + searchTerm);
         Response response = searchIGC(this.postSearchTypes, conditions, "or");
-        return JsonToObject.toIGCItemList(response.getMessage());
+        if (response.getResponseCode() < 300) {
+            return JsonToObject.toIGCItemList(response.getMessage());
+        } else {
+            return new IGCItemList(true);
+        }
     }
 
     /**
@@ -564,7 +609,11 @@ public class URLConnection {
 
         logger.info("Attempting to search IGCResource with name: " + name);
         Response response = searchIGC(this.postSearchTypes, conditions, "or");
-        return JsonToObject.toIGCItemList(response.getMessage());
+        if (response.getResponseCode() < 300) {
+            return JsonToObject.toIGCItemList(response.getMessage());
+        } else {
+            return new IGCItemList(true);
+        }
     }
 
     /**
@@ -592,7 +641,11 @@ public class URLConnection {
 
             logger.info("Attempting to search IGCResource modified between " + min + " and " + max);
             Response response = searchIGC(this.postSearchTypes, conditions, "or");
-            return JsonToObject.toIGCItemList(response.getMessage());
+            if (response.getResponseCode() < 300) {
+                return JsonToObject.toIGCItemList(response.getMessage());
+            } else {
+                return new IGCItemList(true);
+            }
         } catch (ParseException e) {
             logger.error("Could not parse date String(s).");
             throw e;
@@ -624,7 +677,11 @@ public class URLConnection {
 
             logger.info("Attempting to search IGCResource created between " + min + " and " + max);
             Response response = searchIGC(this.postSearchTypes, conditions, "or");
-            return JsonToObject.toIGCItemList(response.getMessage());
+            if (response.getResponseCode() < 300) {
+                return JsonToObject.toIGCItemList(response.getMessage());
+            } else {
+                return new IGCItemList(true);
+            }
         } catch (ParseException e) {
             logger.error("Could not parse date String(s)");
             throw e;
@@ -650,7 +707,11 @@ public class URLConnection {
 
         logger.info("Attempting to search IGCResource by user: " + name);
         Response response = searchIGC(this.postSearchTypes, conditions, "or");
-        return JsonToObject.toIGCItemList(response.getMessage());
+        if (response.getResponseCode() < 300) {
+            return JsonToObject.toIGCItemList(response.getMessage());
+        } else {
+            return new IGCItemList(true);
+        }
     }
 
     /**
@@ -671,7 +732,11 @@ public class URLConnection {
 
         logger.info("Attempting to search IGCResource by custom property: " + property + " with search term: " + name);
         Response response = searchIGC(this.postSearchTypes, conditions, "or");
-        return JsonToObject.toIGCItemList(response.getMessage());
+        if (response.getResponseCode() < 300) {
+            return JsonToObject.toIGCItemList(response.getMessage());
+        } else {
+            return new IGCItemList(true);
+        }
     }
 
     /**
@@ -687,7 +752,12 @@ public class URLConnection {
         conditions.add(condition);
 
         logger.info("Attempting to search IGCResource with 'NULL' for property: " + property);
-        return JsonToObject.toIGCItemList(searchIGC(this.postSearchTypes, conditions, "or").getMessage());
+        Response response = searchIGC(this.postSearchTypes, conditions, "or");
+        if (response.getResponseCode() < 300) {
+            return JsonToObject.toIGCItemList(response.getMessage());
+        } else {
+            return new IGCItemList(true);
+        }
     }
 
     //// DELETE METHODS - Delete ////

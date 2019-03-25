@@ -20,12 +20,30 @@ public class IGCItemList {
      */
     private ArrayList<IGCItem> items;
 
+    /**
+     * Set to empty to note that the IGCItemList is empty.
+     */
+    private boolean failedResponse;
+
 
     /**
-     * No argument constructor.
+     * Create an empty IGCItemList.
+     * @param failedResponse Indicates whether this IGCITemList represents a failed response, and contains no items.
      */
-    public IGCItemList() {
+    public IGCItemList(boolean failedResponse) {
+        this.failedResponse = failedResponse;
+        this.paging = new IGCPaging(0, "", 0, 0, 0); //Build empty paging info.
+        this.items = new ArrayList<>(); //Initialize empty ArrayList.
+    }
 
+    /**
+     * Create a new populated IGCItemList.
+     * @param paging Paging info object.
+     * @param items ArrayList of IGCItems.
+     */
+    public IGCItemList(IGCPaging paging, ArrayList<IGCItem> items) {
+        this.paging = paging;
+        this.items = items;
     }
 
     //// GETTERS AND SETTERS ////
@@ -35,6 +53,7 @@ public class IGCItemList {
     }
 
     public void setPaging(IGCPaging paging) {
+        this.failedResponse = false;
         this.paging = paging;
     }
 
@@ -43,7 +62,16 @@ public class IGCItemList {
     }
 
     public void setItems(ArrayList<IGCItem> items) {
+        this.failedResponse = false;
         this.items = items;
+    }
+
+    public boolean isFailedResponse() {
+        return failedResponse;
+    }
+
+    public void setFailedResponse(boolean failedResponse) {
+        this.failedResponse = failedResponse;
     }
 
     //// END GETTERS AND SETTERS ////

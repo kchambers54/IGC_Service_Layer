@@ -66,7 +66,7 @@ public class Main {
 //            //// END TEST 1 ////
             test_num++;
 
-//            //// TEST 2 - GET from the IGC API ////
+//            //// TEST 2 - GET from the IGC API //- Runs the URLConnection.get() method, which is
 //            logger.info("---- BEGINNING TEST2 ----\n");
 //            // Establish URLConnection object with base URL.
             URLConnection connection = new URLConnection(url, disableSSL,
@@ -172,7 +172,7 @@ public class Main {
             if (postResponse2.getResponseCode() < 300) {
                 logger.info("---- BEGINNING TEST9: Update the Term we created in test8\n");
                 //Create the new Term object with only the fields we're updating filled out.
-                Term updateTerm = new Term(
+                Term updateTerm = new Term( //Can update using a new term seen here, or as done in test10.
                         "a_test_term_1_UPDATE", "UPDATED SHORT DESCRIPTION",
                         "UPDATED LONG DESCRIPTION TEST",
                         connection.getResourceParentId(postResponse2.get_id()),
@@ -199,13 +199,11 @@ public class Main {
             if (postResponse1.getResponseCode() < 300) {
                 logger.info("---- BEGINNING TEST10: Update the Category we created in test7\n");
                 //Create the new Category object.
-                Category updateCategory = new Category(
-                        "a_test_category_1_UPDATE", "UPDATED SHORT DESCRIPTION",
-                        "UPDATED LONG DESCRIPTION TEST",
-                        connection.getResourceParentId(postResponse1.get_id())
-                        //Above line is getting the ID of the parent category of the category we created in Test7.
-                );
-                String idToUpdate2 = postResponse1.get_id(); //Get ID of category we created
+                Category updateCategory = new Category();  // Can update using a new term with fields added by setters
+                updateCategory.setName("Updated_Test_Category");
+                updateCategory.setShort_description("Updated short description");
+                //Get ID of category we created
+                String idToUpdate2 = postResponse1.get_id();
                 // Call the updateIGCResource method with the new Category we created.
                 Response putResponse2 = connection.updateIGCResource(idToUpdate2, updateCategory);
                 // Get the response from the API.
@@ -262,20 +260,22 @@ public class Main {
             logger.debug("Submitting search request for resources with 'test' in name");
             IGCItemList itemList13 = connection.searchIGCResourceName("test");
             //Print results
-            logger.info("Number of search results: " + itemList13.getPaging().getNumTotal() + "\n");
+            if (itemList13.getPaging() != null) {
+                logger.info("Number of search results: " + itemList13.getPaging().getNumTotal() + "\n");
+            }
             logger.info("---- ENDING TEST13 ----\n");
             //// END TEST 13 ////
             test_num++;
 
             //// TEST 14 - POST Search for a resource modified between two date-times ////
-            logger.info("---- BEGINNING TEST14: Search for Resources modified between 2019/01/01 and 2019/02/01\n");
+            logger.info("---- BEGINNING TEST14: Search for Resources modified between 2019/01/01 and 2019/03/01\n");
             // Get current time.
             long curTime = new Date().getTime();
             // Call the search method and get a response
             logger.debug("Submitting search request for resources modified between two times");
             IGCItemList itemList14 = connection.searchIGCResourceModifiedBetween(
-                    "2019/01/01 00:00:00",
-                    "2019/02/01 00:00:00"
+                    "2019/02/01 00:00:00",
+                    "2019/04/01 00:00:00"
             );
             //Print results
             logger.info("Number of search results: " + itemList14.getPaging().getNumTotal() + "\n");
@@ -311,10 +311,14 @@ public class Main {
                     "6662c0f2.ee6a64fe.00t6cc6op.9eo1d2k.skhof8.dgog8qrnvlvm4pglk887k", //ID of 'Data Dictionary'
                     "category");
             logger.info("ID of a category is found to be a category: " + result17);
-            logger.info("---- ENDING TEST16 ----\n");
+            logger.info("---- ENDING TEST17 ----\n");
             //// END TEST 17 ////
             test_num++;
 
+            IGCResource resource19 = connection.getIGCResourceById("fsdkhfgskahdfkasjhgdfkjhasdgf");
+            System.out.println("Resource 19: " + resource19);
+
+            //Currently not running test18, but was tested to be functional.
 //            //// TEST 18 - updateIGCTermName method ////
 //            logger.info("---- Beginning TEST18 ----\n");
 //            //See if term to update exists

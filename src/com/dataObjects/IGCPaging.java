@@ -38,6 +38,14 @@ public class IGCPaging implements Serializable {
         super();
     }
 
+    public IGCPaging(int numTotal, String next, int pageSize, int end, int begin) {
+        this.numTotal = numTotal;
+        this.next = next;
+        this.pageSize = pageSize;
+        this.end = end;
+        this.begin = begin;
+    }
+
     //// GETTERS AND SETTERS ////
 
 

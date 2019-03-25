@@ -16,13 +16,13 @@ public class Args {
     private String url = "https://ec2-3-83-75-69.compute-1.amazonaws.com:9443/ibm/iis/igc-rest/v1/";
 
     @Parameter(names = "-ssl", description = "Disable SSL Cert Verification", order=1)
-    private boolean disableSslVerification = true; //TODO - Currently disabled by default
+    private boolean disableSslVerification = false;
 
     @Parameter(names = {"-user", "-username"}, description = "Username for all HTTP requests", order=2)
-    private String username = "igc.api.user";
+    private String username;
 
     @Parameter(names = {"-pw", "-password"}, description = "Password for all HTTP requests", password = true, order=3)
-    private String password = "igc.api.user"; //TODO Remove default password.
+    private String password;
 
     public boolean isHelp() {
         return help;

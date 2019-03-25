@@ -69,6 +69,10 @@ public class Term extends IGCResource implements Serializable {
     private String modified_by;
     private String _id;
     private String _url;
+    /**
+     * Indicates whether the term was generated from a failed response (and does not contain useful info).
+     */
+    private boolean failedResponse;
 
     /**
      * No argument Constructor.
@@ -76,6 +80,32 @@ public class Term extends IGCResource implements Serializable {
     public Term() {
         super();
         this._type = "term";
+    }
+
+    /**
+     * Create an empty Term object. Used to create a placeholder after a failed http request.
+     * @param failedResponse indicates whether the Term was generated after a failed response, and contains
+     *                       no useful information.
+     */
+    public Term(boolean failedResponse) {
+        this("", "", "", "", "");
+        this.failedResponse = failedResponse;
+
+    }
+
+    /**
+     * Create an empty Term object. Used to create a placeholder after a failed http request.
+     * Unlike the single argument constructor, the second argument here allows the object's _type property to be
+     *        set to null. This is done when the Term object represents an ambiguous failed IGCResource.
+     * @param failedResponse indicates whether the Term was generated after a failed response, and contains
+     *                       no useful information.
+     * @param nullType Set to 'true' to nullify the object's _type property.
+     */
+    public Term(boolean failedResponse, boolean nullType) {
+        this(failedResponse);
+        if (nullType) {
+            this._type = "";
+        }
     }
 
     /**
@@ -322,6 +352,14 @@ public class Term extends IGCResource implements Serializable {
 
     public void setCustom_Business_Types(ArrayList<String> custom_Business_Types) {
         this.custom_Business_Types = custom_Business_Types;
+    }
+
+    public boolean isFailedResponse() {
+        return failedResponse;
+    }
+
+    public void setFailedResponse(boolean failedResponse) {
+        this.failedResponse = failedResponse;
     }
 
     //// END GETTERS AND SETTERS ////
