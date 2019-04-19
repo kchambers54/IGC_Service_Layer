@@ -3,10 +3,6 @@
     <output-path>$PROJECT_DIR$/out/artifacts/IGC_Service_Layer_jar</output-path>
     <root id="archive" name="IGC_Service_Layer.jar">
       <element id="module-output" name="IGC_Service_Layer" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/lib/gson-2.6.2.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jcommander-1.72.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/lib/slf4j-api-1.7.26.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/lib/slf4j-simple-1.7.26.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

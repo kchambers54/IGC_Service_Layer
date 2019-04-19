@@ -7,35 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="efb893b7-36a2-4452-960a-0fb05ec0ab96" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_beust_jcommander_1_72.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_code_gson_gson_2_6_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_26.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_simple_1_7_26.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/IGC_Service_Layer_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/IGC_Service_Layer_jar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IGC_Service_Layer.iml" beforeDir="false" afterPath="$PROJECT_DIR$/IGC_Service_Layer.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/IGC_Service_Layer/META-INF/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/Utility/JsonResponseBuilder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/Utility/JsonToObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/Utility/Utility.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/common/Args.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/common/HttpMethod.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/common/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/common/URLConnection.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/dataObjects/Category.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/dataObjects/IGCItem.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/dataObjects/IGCItemList.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/dataObjects/IGCPaging.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/dataObjects/IGCResource.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/dataObjects/Term.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/dataObjects/TypeContainer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/dataObjects/requests/PostCondition.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/dataObjects/requests/PostSearchBody.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/dataObjects/requests/PostWhere.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/dataObjects/requests/Response.java" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -50,11 +23,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/common/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="25" column="48" lean-forward="true" selection-start-line="25" selection-start-column="48" selection-end-line="25" selection-end-column="48" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="34">
+              <caret line="2" column="39" selection-start-line="2" selection-start-column="39" selection-end-line="2" selection-end-column="39" />
             </state>
           </provider>
         </entry>
@@ -166,7 +136,22 @@
   </component>
   <component name="MavenProjectNavigator">
     <treeState>
-      <expand />
+      <expand>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="IGC_Service_Layer" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+        </path>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="IGC_Service_Layer" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+          <item name="Lifecycle" type="58874e2:MavenProjectsStructure$LifecycleNode" />
+        </path>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="IGC_Service_Layer" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+          <item name="Dependencies" type="f4be9f2a:MavenProjectsStructure$DependenciesNode" />
+        </path>
+      </expand>
       <select />
     </treeState>
   </component>
@@ -260,7 +245,7 @@
     <property name="Repository.Attach.Annotations" value="false" />
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1555696430605" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1555696630296" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/slf4j-simple-1.7.26.jar!/" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
@@ -287,7 +272,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JAR Application.IGC_Service_Layer.jar">
+  <component name="RunManager" selected="Maven.IGC_Service_Layer [site]">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="com.common.Main" />
       <module name="IGC_Service_Layer" />
@@ -297,6 +282,10 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration name="IGC_Service_Layer-1.0-Lambda-Compatible.jar" type="JarApplication" factoryName="JAR Application" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/target/IGC_Service_Layer-1.0-Lambda-Compatible.jar" />
+      <method v="2" />
     </configuration>
     <configuration name="IGC_Service_Layer.jar" type="JarApplication" factoryName="JAR Application">
       <option name="JAR_PATH" value="$PROJECT_DIR$/out/artifacts/IGC_Service_Layer_jar/IGC_Service_Layer.jar" />
@@ -308,12 +297,41 @@
         </option>
       </method>
     </configuration>
+    <configuration name="IGC_Service_Layer [site]" type="MavenRunConfiguration" factoryName="Maven" temporary="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="site" />
+              </list>
+            </option>
+            <option name="pomFileName" value="pom.xml" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Application.Main" />
       <item itemvalue="JAR Application.IGC_Service_Layer.jar" />
+      <item itemvalue="JAR Application.IGC_Service_Layer-1.0-Lambda-Compatible.jar" />
+      <item itemvalue="Maven.IGC_Service_Layer [site]" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Maven.IGC_Service_Layer [site]" />
+        <item itemvalue="JAR Application.IGC_Service_Layer-1.0-Lambda-Compatible.jar" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -333,7 +351,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="0" width="974" height="1047" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Designer" order="0" />
       <window_info id="UI Designer" order="1" />
@@ -356,7 +373,7 @@
       <window_info anchor="right" id="Theme Preview" order="0" />
       <window_info anchor="right" id="Capture Analysis" order="1" />
       <window_info anchor="right" id="Palette&#9;" order="2" />
-      <window_info anchor="right" id="Maven" order="3" weight="0.32932165" />
+      <window_info anchor="right" id="Maven" order="3" visible="true" weight="0.32932165" />
       <window_info anchor="right" id="Palette" order="4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="5" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="6" weight="0.24951077" />
@@ -758,11 +775,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/common/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="25" column="48" lean-forward="true" selection-start-line="25" selection-start-column="48" selection-end-line="25" selection-end-column="48" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="34">
+          <caret line="2" column="39" selection-start-line="2" selection-start-column="39" selection-end-line="2" selection-end-column="39" />
         </state>
       </provider>
     </entry>
@@ -843,6 +857,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
+          <last-edited>Maven: com.beust:jcommander:1.72</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
