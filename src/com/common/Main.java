@@ -1,11 +1,15 @@
 package com.common;
 
-import com.beust.jcommander.JCommander;
+import com.amazonaws.services.lambda.runtime.Context;
 import com.dataObjects.Category;
 import com.dataObjects.IGCItemList;
 import com.dataObjects.IGCResource;
 import com.dataObjects.Term;
 import com.dataObjects.requests.Response;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.impl.SimpleLogger;
@@ -22,54 +26,11 @@ public class Main {
      *             'String username', 'String password')
      */
     public static void main(String[] argv) {
-        Args args = new Args();
-        JCommander jct = JCommander.newBuilder()
-                .addObject(args)
-                .build();
-        jct.parse(argv);
-        if (args.isHelp()) {
-            jct.usage();
-        } else {
-            if (args.isDebug()) { // Enables verbose debugging mode.
-                System.out.println("DEBUG MODE");
-                System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
-            }
-            logger = LoggerFactory.getLogger(Main.class);
+        logger = LoggerFactory.getLogger(Main.class);
 
-            tests(args.getUrl(), args.isDisableSslVerification(), args.getUsername(), args.getPassword());
-        }
-    }
 
-    private static void tests2(String url, boolean disableSSL, String username, String password) {
-        // Base URL for IGC API at time of code creation (2019/03/19).
-        String apiUrl = "https://ec2-3-83-75-69.compute-1.amazonaws.com:9443/ibm/iis/igc-rest/v1/";
-
-        try {
-            //Run tests:
-            URLConnection connection = new URLConnection(url, disableSSL,
-                    username, password);
-
-            //// TEST 7 - POST a new category. ////
-            logger.info("---- BEGINNING TEST7: Create new Category (Data Dictionary as parent)\n");
-            //Create the new Category object with parent: "Data Directory".
-            Category newCategory = new Category(
-                    "a_test_cat_1", "Test category created via API",
-                    "long description test",
-                    "6662c0f2.ee6a64fe.00t6cc6op.9eo1d2k.skhof8.dgog8qrnvlvm4pglk887k"
-            );
-            // Call the createIGCCategory method with the new Category we created.
-            Response postResponse1 = connection.createIGCResource(newCategory);
-            // Get the response from the API.
-            logger.info("Response Code: " + postResponse1.getResponseCode() +
-                    "\nResponse Code Message: " + postResponse1.getCodeMessage());
-            logger.debug("Message:\n" + postResponse1.getMessage() +
-                    "\nNew ID: " + postResponse1.get_id() + "\n");
-            logger.info("---- ENDING TEST7 ----\n");
-            //// END TEST 7 ////
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(" - ERROR - -");
-        }
+        // Run tests below:
+//        tests(args.getUrl(), args.isDisableSslVerification(), args.getUsername(), args.getPassword());
     }
 
     /**
