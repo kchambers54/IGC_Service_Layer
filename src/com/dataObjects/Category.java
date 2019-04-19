@@ -52,7 +52,7 @@ public class Category extends IGCResource implements Serializable {
     /**
      * Indicates whether the category was generated from a failed response (and does not contain useful info).
      */
-    private boolean failedResponse;
+//    private boolean failedResponse;
 
     // NOTES ON CUSTOM FIELDS:
     //  - Considered making an object that contains all of these.
@@ -79,12 +79,13 @@ public class Category extends IGCResource implements Serializable {
 
     /**
      * Creates an empty Category. Generally used as a placeholder after a failed http request
-     * @param failedResponse Indicated whether the Category was generated after a failed response, and contains
-     *                       no useful information.
+     * @param nullType Set to True to set the Category's type to empty string. This indicates a failure.
      */
-    public Category(boolean failedResponse) {
+    public Category(boolean nullType) {
         this("", "", "", "");
-        this.failedResponse = failedResponse;
+        if (nullType) {
+            this._type = "";
+        }
     }
 
     /**
@@ -278,6 +279,7 @@ public class Category extends IGCResource implements Serializable {
     public void set_url(String _url) {
         this._url = _url;
     }
+
 
     //// END GETTERS AND SETTERS ////
 

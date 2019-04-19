@@ -40,6 +40,38 @@ public class Main {
         }
     }
 
+    private static void tests2(String url, boolean disableSSL, String username, String password) {
+        // Base URL for IGC API at time of code creation (2019/03/19).
+        String apiUrl = "https://ec2-3-83-75-69.compute-1.amazonaws.com:9443/ibm/iis/igc-rest/v1/";
+
+        try {
+            //Run tests:
+            URLConnection connection = new URLConnection(url, disableSSL,
+                    username, password);
+
+            //// TEST 7 - POST a new category. ////
+            logger.info("---- BEGINNING TEST7: Create new Category (Data Dictionary as parent)\n");
+            //Create the new Category object with parent: "Data Directory".
+            Category newCategory = new Category(
+                    "a_test_cat_1", "Test category created via API",
+                    "long description test",
+                    "6662c0f2.ee6a64fe.00t6cc6op.9eo1d2k.skhof8.dgog8qrnvlvm4pglk887k"
+            );
+            // Call the createIGCCategory method with the new Category we created.
+            Response postResponse1 = connection.createIGCResource(newCategory);
+            // Get the response from the API.
+            logger.info("Response Code: " + postResponse1.getResponseCode() +
+                    "\nResponse Code Message: " + postResponse1.getCodeMessage());
+            logger.debug("Message:\n" + postResponse1.getMessage() +
+                    "\nNew ID: " + postResponse1.get_id() + "\n");
+            logger.info("---- ENDING TEST7 ----\n");
+            //// END TEST 7 ////
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(" - ERROR - -");
+        }
+    }
+
     /**
      * Essentially a test script that runs through several URLConnection methods.
      * @param url Base URL of API. For IGC, include everything up to '.../v1/'.
@@ -122,7 +154,6 @@ public class Main {
             logger.info("---- BEGINNING TEST6: getIGCItemList()\n");
             // Call the getIGCTermList method for the object, entering how many items we want returned.
             IGCItemList termList = connection.getIGCTermList(100);
-            logger.debug("termList object generated\n" + termList.toString());
             // Try getting Term object variable (name).
             logger.info("\nNumber of results: " + termList.getPaging().getNumTotal() + "\n");
             logger.info("---- ENDING TEST6 ----\n");
@@ -157,6 +188,7 @@ public class Main {
                     "6662c0f2.ee6a64fe.00t6cc6op.9eo1d2k.skhof8.dgog8qrnvlvm4pglk887k",
                     "CANDIDATE"
             );
+
             // Call the createIGCTerm method with the new Term we created.
             Response postResponse2 = connection.createIGCResource(newTerm);
             // Get the response from the API.

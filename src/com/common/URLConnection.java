@@ -253,7 +253,7 @@ public class URLConnection {
                     throw new IllegalArgumentException("Called getIGCTermById on a non-term.");
                 }
             } else { // Request failed - Can add more specific handling here.
-                return new Term(true);
+                return new Term();
             }
         } catch (Exception e) {
             logger.error("XXX - failed getIGCTermById()");
@@ -285,7 +285,7 @@ public class URLConnection {
                     throw new IllegalArgumentException("Called getIGCCategoryById on a non-category.");
                 }
             } else { // Request failed. Can add more specific handling here.
-                return new Category(true);
+                return new Category();
             }
         } catch (Exception e) {
             logger.error("XXX - failed getIGCCategoryById()");
@@ -324,7 +324,7 @@ public class URLConnection {
                             "Attempted to GET an IGCResource for which there is no Java Object");
                 }
             } else { // Can add more specific handling here...
-                return new Term(true, true); // Just returns an empty Term as a placeholder
+                return new Term(true); // Just returns an empty Term as a placeholder
             }                                                   // since the type of resource to be returned is unknown.
         } catch (Exception e) {
             logger.error("XXX - getIGCResourceById() failed");
