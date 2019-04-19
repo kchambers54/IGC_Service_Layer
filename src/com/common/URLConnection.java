@@ -1,7 +1,9 @@
 package com.common;
 
-import java.io.*;
-import java.net.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,14 +14,17 @@ import java.util.List;
 import com.Utility.JsonToObject;
 import com.Utility.JsonResponseBuilder;
 import com.Utility.Utility;
-import com.dataObjects.*;
+import com.dataObjects.Category;
+import com.dataObjects.IGCItemList;
+import com.dataObjects.IGCResource;
+import com.dataObjects.Term;
 import com.dataObjects.requests.PostCondition;
 import com.dataObjects.requests.PostSearchBody;
 import com.dataObjects.requests.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.Utility.JsonToObject.toTypeContainer;
+//import static com.Utility.JsonToObject.toTypeContainer;
 
 /**
  * A custom URLConnection class
@@ -471,8 +476,7 @@ public class URLConnection {
         try {
             logger.info("Attempting to update IGCResource: " + id);
             logger.debug("New properties to PUT:\n" + updateResource);
-            Response response = makeHttpRequest(putUrl, HttpMethod.PUT, updateResource);
-            return response;
+            return makeHttpRequest(putUrl, HttpMethod.PUT, updateResource);
         } catch (Exception e) {
             logger.error("XXX - makeHttpRequest failed when called from updateIGCResource()");
             e.printStackTrace();
@@ -521,8 +525,7 @@ public class URLConnection {
         try {
             logger.info("Attempting to create new IGCResource");
             logger.debug("Resource to be created:\n" + newResource);
-            Response response = makeHttpRequest(postUrl, HttpMethod.POST, newResource);
-            return response;
+            return makeHttpRequest(postUrl, HttpMethod.POST, newResource);
         } catch (Exception e) {
             logger.error("XXX - makeHttpRequest failed when called from createIGCResource()");
             e.printStackTrace();
@@ -699,7 +702,7 @@ public class URLConnection {
     public IGCItemList searchIGCResourceByUser(String name) throws IOException, IllegalArgumentException {
         // Set up search conditions
         PostCondition modCondition = new PostCondition("modified_by", "like %{0}%", name);
-        PostCondition createCondition = new PostCondition("created_by", "like %{0}%", name);
+//        PostCondition createCondition = new PostCondition("created_by", "like %{0}%", name);
 
         List<PostCondition> conditions = new ArrayList<>();
         conditions.add(modCondition);
@@ -772,8 +775,7 @@ public class URLConnection {
         String urlWithExtension = this.urlString + "assets/" + id;
         URL deleteUrl = new URL(urlWithExtension);
         try {
-            Response response = makeHttpRequest(deleteUrl, HttpMethod.DELETE, null);
-            return response;
+            return makeHttpRequest(deleteUrl, HttpMethod.DELETE, null);
         } catch (Exception e) {
             e.printStackTrace();
             throw e;

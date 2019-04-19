@@ -46,7 +46,7 @@ _____________________________
 
 KNOWN ISSUE (3/21/2019):
 
-	1. SERVER ISSUES?: Have been getting the below errors on occasion.  Generally everything works well, but
+	1. IGC SERVER ISSUES?: Have been getting the below errors on occasion.  Generally everything works well, but
 	occasionally the errors below will pup up and continue until either the server is reset, or some unknown
 	amount of time has passed.
 	    - 400 Bad Request:  when doing a POST-search that would return more than 5 results.
