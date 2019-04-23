@@ -2,6 +2,8 @@ package com.dataObjects;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -351,5 +353,10 @@ public class Term extends IGCResource implements Serializable {
     public String toString() {
         Gson gsonPrinter = new GsonBuilder().setPrettyPrinting().create(); //Pretty Printer
         return gsonPrinter.toJson(this);  //Isn't this great?
+    }
+
+    public JsonObject toJsonObject() {
+        JsonParser parser = new JsonParser();
+        return parser.parse(this.toString()).getAsJsonObject();
     }
 }

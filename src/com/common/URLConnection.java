@@ -720,20 +720,20 @@ public class URLConnection {
     /**
      * Search the IGC API for resources with a given name for a specified property.
      * @param property Property to search the IGC API for (name, parent_category, parent_category._id, etc).
-     * @param name Search term.
+     * @param term Search term.
      * @return IGCItemList of search results.
      * @throws IOException: thrown by makeHttpRequest()
      * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
      */
-    public IGCItemList searchIGCResourceCustom(String property, String name)
+    public IGCItemList searchIGCResourceCustom(String property, String term)
             throws IOException, IllegalArgumentException {
         // Set up search conditions
-        PostCondition custCondition = new PostCondition(property, "like %{0}%", name);
+        PostCondition custCondition = new PostCondition(property, "like %{0}%", term);
 
         List<PostCondition> conditions = new ArrayList<>();
         conditions.add(custCondition);
 
-        logger.info("Attempting to search IGCResource by custom property: " + property + " with search term: " + name);
+        logger.info("Attempting to search IGCResource by custom property: " + property + " with search term: " + term);
         Response response = searchIGC(this.postSearchTypes, conditions, "or");
         if (response.getResponseCode() < 300) {
             return JsonToObject.toIGCItemList(response.getMessage());

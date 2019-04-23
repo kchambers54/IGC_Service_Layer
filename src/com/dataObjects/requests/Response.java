@@ -2,6 +2,9 @@ package com.dataObjects.requests;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.Serializable;
 
@@ -83,5 +86,10 @@ public class Response implements Serializable {
     public String toString() {
         Gson gsonPrinter = new GsonBuilder().setPrettyPrinting().create(); //Pretty Printer
         return gsonPrinter.toJson(this);
+    }
+
+    public JsonObject toJsonObject() {
+        JsonParser parser = new JsonParser();
+        return parser.parse(this.toString()).getAsJsonObject();
     }
 }

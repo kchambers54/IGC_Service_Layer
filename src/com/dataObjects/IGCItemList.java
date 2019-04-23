@@ -2,6 +2,8 @@ package com.dataObjects;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 
@@ -86,5 +88,10 @@ public class IGCItemList {
     public String toString() {
         Gson gsonPrinter = new GsonBuilder().setPrettyPrinting().create(); //Pretty Printer
         return gsonPrinter.toJson(this);
+    }
+
+    public JsonObject toJsonObject() {
+        JsonParser parser = new JsonParser();
+        return parser.parse(this.toString()).getAsJsonObject();
     }
 }

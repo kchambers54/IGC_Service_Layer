@@ -2,6 +2,8 @@ package com.dataObjects;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -49,10 +51,6 @@ public class Category extends IGCResource implements Serializable {
      * API URL at which this resource can be found.
      */
     private String _url;
-    /**
-     * Indicates whether the category was generated from a failed response (and does not contain useful info).
-     */
-//    private boolean failedResponse;
 
     // NOTES ON CUSTOM FIELDS:
     //  - Considered making an object that contains all of these.
@@ -281,6 +279,8 @@ public class Category extends IGCResource implements Serializable {
     }
 
 
+
+
     //// END GETTERS AND SETTERS ////
 
     /**
@@ -293,5 +293,10 @@ public class Category extends IGCResource implements Serializable {
     public String toString() {
         Gson gsonPrinter = new GsonBuilder().setPrettyPrinting().create(); //Pretty Printer
         return gsonPrinter.toJson(this);  //Isn't this great?
+    }
+
+    public JsonObject toJsonObject() {
+        JsonParser parser = new JsonParser();
+        return parser.parse(this.toString()).getAsJsonObject();
     }
 }

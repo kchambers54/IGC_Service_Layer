@@ -1,15 +1,10 @@
 package com.common;
 
-import com.amazonaws.services.lambda.runtime.Context;
 import com.dataObjects.Category;
 import com.dataObjects.IGCItemList;
 import com.dataObjects.IGCResource;
 import com.dataObjects.Term;
 import com.dataObjects.requests.Response;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.impl.SimpleLogger;

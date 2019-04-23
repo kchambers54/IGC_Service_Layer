@@ -1,5 +1,7 @@
 package com.dataObjects;
 
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 
 /**
@@ -65,4 +67,6 @@ public abstract class IGCResource {
     abstract public String get_url();
 
     abstract public void set_url(String _url);
+
+    abstract public JsonObject toJsonObject();
 }
