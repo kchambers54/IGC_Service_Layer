@@ -24,7 +24,6 @@ import com.dataObjects.requests.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//import static com.Utility.JsonToObject.toTypeContainer;
 
 /**
  * A custom URLConnection class
@@ -133,7 +132,7 @@ public class URLConnection {
             connection = (HttpURLConnection) newUrl.openConnection();
         }
 
-        return JsonResponseBuilder.getResponseObject(connection); //Use this to return only the message of the response.
+        return JsonResponseBuilder.getResponseObject(connection); //Use this to return the message of the response.
     }
 
     /**
@@ -236,6 +235,7 @@ public class URLConnection {
      * @param id ID of Term to request (URL extension for GET request).
      * @return a Term object representing the received JSON. Returns an empty Term with failedResponse set to true
      *         if the Term does not exist or if the server does not respond.
+     * @deprecated Can use getResourceById.
      * @throws IOException: Thrown by makeHttpRequest()
      * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
      */
@@ -268,6 +268,7 @@ public class URLConnection {
      * @param id ID of category to request (URL extension for GET request).
      * @return a Category object representing the received JSON. Returns an empty Category with failedResponse set
      *         to true if the Category does not exist or if the server does not respond.
+     * @deprecated Can use getIGCResourceById.
      * @throws IOException: Thrown by makeHttpRequest()
      * @throws IllegalArgumentException: Thrown by JsonToObject.toIGCItemList()
      */
@@ -325,7 +326,7 @@ public class URLConnection {
                 }
             } else { // Can add more specific handling here...
                 return new Term(true); // Just returns an empty Term as a placeholder
-            }                                                   // since the type of resource to be returned is unknown.
+            }                                  /// since the type of resource to be returned is unknown.
         } catch (Exception e) {
             logger.error("XXX - getIGCResourceById() failed");
             e.printStackTrace();
