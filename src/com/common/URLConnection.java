@@ -11,9 +11,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import com.Utility.JsonToObject;
-import com.Utility.JsonResponseBuilder;
-import com.Utility.Utility;
+import com.enums.HttpMethod;
+import com.utility.JsonToObject;
+import com.utility.JsonResponseBuilder;
+import com.utility.Utility;
 import com.dataObjects.Category;
 import com.dataObjects.IGCItemList;
 import com.dataObjects.IGCResource;
@@ -51,7 +52,7 @@ public class URLConnection {
      * @param url: HTTP URL to make requests to. Include domain name, port,
      *           and general extension that will be used for all requests.
      *           Education test IGC API: 'https://ec2-3-83-75-69.compute-1.amazonaws.com:9443/ibm/iis/igc-rest/v1/'
-     * @throws IllegalStateException: Thrown by Utility.disableSslVerification().
+     * @throws IllegalStateException: Thrown by utility.disableSslVerification().
      */
     public URLConnection(String url, boolean disableSslVerification) throws IllegalStateException {
         this.urlString = url;
@@ -72,7 +73,7 @@ public class URLConnection {
      * @param url: HTTP URL to make requests to. Include domain name, port,
      *           and general extension that will be used for all requests.
      *           Education test IGC API: 'https://ec2-3-83-75-69.compute-1.amazonaws.com:9443/ibm/iis/igc-rest/v1/'
-     * @throws IllegalStateException: Thrown by Utility.disableSslVerification().
+     * @throws IllegalStateException: Thrown by utility.disableSslVerification().
      */
     public URLConnection(String url, boolean disableSslVerification, String username, String password)
             throws IllegalStateException {

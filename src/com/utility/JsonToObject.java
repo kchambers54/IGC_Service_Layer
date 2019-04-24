@@ -1,4 +1,4 @@
-package com.Utility;
+package com.utility;
 
 import com.dataObjects.*;
 import com.google.gson.Gson;
@@ -66,6 +66,8 @@ public class JsonToObject {
             throw e;
         }
     }
+
+    //TODO: Will need to create more methods when new Resource types are added.
 
     /**
      * Converts a JSON String to an IGCItem object using the GSON library.

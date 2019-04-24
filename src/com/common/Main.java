@@ -21,7 +21,7 @@ public class Main {
      *             'String username', 'String password')
      */
     public static void main(String[] argv) {
-        logger = LoggerFactory.getLogger(Main.class);
+//        logger = LoggerFactory.getLogger(Main.class);
 
 
         // Run tests below:

@@ -1,12 +1,8 @@
 // Inspired by "https://www.baeldung.com/java-http-request"
 
-package com.Utility;
+package com.utility;
 
 import com.dataObjects.requests.Response;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

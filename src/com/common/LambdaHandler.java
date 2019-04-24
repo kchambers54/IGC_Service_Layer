@@ -1,11 +1,11 @@
 package com.common;
 
-import com.Utility.JsonToObject;
+import com.dataObjects.Category;
+import com.dataObjects.Term;
+import com.utility.JsonToObject;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
-import com.dataObjects.Category;
-import com.dataObjects.Term;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.slf4j.Logger;
@@ -128,7 +128,7 @@ public class LambdaHandler implements RequestStreamHandler, RequestHandler<Objec
                 break;
             }
             // PUT Methods
-            case "updateIGCResource": { // TODO: Having 500 - server errors with custom attributes.
+            case "updateIGCResource": {
                 outputJson = callUpdateIGCResource(inputJson, connection, inputResource);
                 break;
             }
@@ -191,13 +191,16 @@ public class LambdaHandler implements RequestStreamHandler, RequestHandler<Objec
 
     /**
      * Called by performRequest() when updating a resource in IGC.  Abstracted to improve readability.
+     * TODO: Will need to update as new resource types are created.
      * @param inputJson JsonObject received by AWS Lambda.
      * @param connection URLConnection object to interact with IGC API.
      * @param inputResource JsonObject representing inputJson.get("resource").
      * @return JsonObject response that will be sent back to caller of the AWS Lambda function.
      * @throws IOException:
      */
-    private static JsonObject callUpdateIGCResource(JsonObject inputJson, URLConnection connection, JsonObject inputResource) throws IOException {
+    private static JsonObject callUpdateIGCResource(JsonObject inputJson, URLConnection connection,
+                                                    JsonObject inputResource)
+            throws IOException, IllegalArgumentException {
         String type;
         JsonObject outputJson;
         type = inputResource.get("_type").getAsString();
@@ -222,17 +225,20 @@ public class LambdaHandler implements RequestStreamHandler, RequestHandler<Objec
 
     /**
      * Called by performRequest() when creating a resource in IGC.  Abstracted to improve readability.
+     * TODO: Will need to update as new resource types are created.
      * @param connection URLConnection object to interact with IGC API.
      * @param inputResource JsonObject representing the 'resource' received by AWS Lambda. This is the
      *                      resource that will be created in IGC.
      * @return JsonObject response that will be sent back to caller of the AWS Lambda function.
      * @throws IOException:
      */
-    private static JsonObject callCreateIGCResource(URLConnection connection, JsonObject inputResource) throws IOException {
+    private static JsonObject callCreateIGCResource(URLConnection connection, JsonObject inputResource)
+            throws IOException, IllegalArgumentException {
         String type;
         JsonObject outputJson;
         type = inputResource.get("_type").getAsString();
 
+        // Create new resource based on type.
         if (type.equals("term")) {
             Term newTerm = new Term(
                     inputResource.get("name").getAsString(),

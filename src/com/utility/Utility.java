@@ -1,17 +1,14 @@
-//Utility inspired by "https://www.baeldung.com/java-http-request"
+//utility inspired by "https://www.baeldung.com/java-http-request"
 
-package com.Utility;
+package com.utility;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
-import java.io.UnsupportedEncodingException;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
-import java.net.URLEncoder;
 import java.security.cert.X509Certificate;
-import java.util.Map;
 
 /**
  * A utility class containing various static methods.
